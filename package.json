@@ -1,0 +1,76 @@
+{
+	"name": "vscode-oneapi-sample",
+	"displayName": "vscode-oneapi-sample",
+	"description": "oneAPI Sample Browser",
+	"publisher": "intel-corporation",
+	"version": "0.0.1",
+	"license": "MIT",
+	"engines": {
+		"vscode": "^1.35.0"
+	},
+	"enableProposedApi": true,
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onView:upmLibs"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "upmLibs.addEntry",
+				"title": "Add"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "upmView",
+					"title": "oneAPI Samples",
+					"icon": "media/drawing.svg"
+				}
+			]
+		},
+		"views": {
+			"upmView": [
+				{
+					"id": "upmLibs",
+					"name": "CPP"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "upmLibs.addEntry",
+					"when": "view == upmLibs"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^10.14.9",
+		"@types/request-promise": "^4.1.44",
+		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
+		"vscode": "^1.1.28"
+	},
+	"dependencies": {
+		"@types/request-promise-native": "^1.0.16",
+		"promisify-child-process": "^3.1.1",
+		"request-promise-native": "^1.0.7"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://gitlab.devtools.intel.com/sip-oneapi/vscode-oneapi-sample"
+	}
+}
