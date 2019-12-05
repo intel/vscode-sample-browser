@@ -17,7 +17,7 @@ build:
     - yarn package
   artifacts:
     paths:
-      - /*.vsix
+      - "*.vsix"
 
 
 # testing_testing:
