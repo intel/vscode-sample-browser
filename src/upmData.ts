@@ -32,7 +32,6 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
         var val = sample.val;
         vscode.window.showSaveDialog({saveLabel: "Create",}).then(folder => {
             if (val && folder) {
-                //console.log("CC " + val.Path +"   " + folder.path);
                 spawn.exec("oneapi-cli create "+val.Path+" "+folder.path).then(output => {
                     vscode.commands.executeCommand("vscode.openFolder",folder, true);
                 }) ; //folder is a uri, so just send the path :D
