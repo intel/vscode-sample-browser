@@ -1,0 +1,26 @@
+image: node:latest
+
+stages:
+  - build
+  #- test
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  tags: 
+    - docker
+  script:
+    - yarn && yarn compile
+    - yarn package
+  artifacts:
+    paths:
+      - /*.vsix
+
+
+# testing_testing:
+#       stage: test
+#       script: npm test
+
