@@ -72,7 +72,7 @@
 		"watch": "tsc -watch -p ./",
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "npm run compile && node ./node_modules/vscode/bin/test",
-		"package": "vsce package --yarn --baseContentUrl https://gitlab.devtools.intel.com/sip-oneapi/vscode-oneapi-sample/raw/master/"
+		"package": "node_modules/vsce/out/vsce package --yarn --baseContentUrl https://gitlab.devtools.intel.com/sip-oneapi/vscode-oneapi-sample/raw/master/"
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.42",
