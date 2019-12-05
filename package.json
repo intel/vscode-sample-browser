@@ -20,7 +20,12 @@
 		"commands": [
 			{
 				"command": "upmLibs.addEntry",
-				"title": "Add"
+				"title": "Add",
+				"when": "false"
+			},
+			{
+				"command": "oneapisamples.create",
+				"title": "Create"
 			}
 		],
 		"viewsContainers": {
@@ -45,6 +50,18 @@
 				{
 					"command": "upmLibs.addEntry",
 					"when": "view == upmLibs"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "oneapisamples.create",
+					"when": "view == upmLibs && viewItem == sample"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "oneapisamples.create",
+					"when": "false"
 				}
 			]
 		}

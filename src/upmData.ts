@@ -28,18 +28,32 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
         }
     }
 
+    create(sample: Sample): void {
+        var val = sample.val;
+        vscode.window.showSaveDialog({saveLabel: "Create",}).then(folder => {
+            if (val && folder) {
+                //console.log("CC " + val.Path +"   " + folder.path);
+                spawn.exec("oneapi-cli create "+val.Path+" "+folder.path).then(output => {
+                    vscode.commands.executeCommand("vscode.openFolder",folder, true);
+                }) ; //folder is a uri, so just send the path :D
+            }
+        });
+        
+        
+    }
 
     private addSample(key: string[], pos : Map<string, Sample>, ins : SampleItem) {
         if (key.length < 1) {
             //Add Sample
-            var add = new Sample(ins.example.Name,vscode.TreeItemCollapsibleState.None, ins.example.Description);
-            pos.set(ins.path, add);
+            var add = new Sample(ins.example.Name,vscode.TreeItemCollapsibleState.None, ins.example.Description,ins);
+            pos.set(ins.Path, add);
             return;
         }
         var cKey = key[0];
         if (!pos.has(key[0])) {
             var newMap = new Map<string, Sample>();
-            var addCat = new Sample(key[0],vscode.TreeItemCollapsibleState.Collapsed, "", newMap);
+            var addCat = new Sample(key[0],vscode.TreeItemCollapsibleState.Collapsed, "",undefined, newMap, "cat");
+
             pos.set(key[0],addCat);
         }
         key.shift();
@@ -53,9 +67,6 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
                 
             }
         }
-        
-        
-
     }
 
 private async getSortedChildren(node: Sample): Promise<Sample[]> { 
@@ -67,10 +78,7 @@ private async getSortedChildren(node: Sample): Promise<Sample[]> {
 }
 
 private async getIndex(): Promise<Sample[]> {
-
-
     let resp : SampleItem[] = await spawn.exec('oneapi-cli list -o cpp -j', {}).then(output => JSON.parse(<string>output.stdout));
-
     var Items : Sample[] = new Array(resp.length);
 
 
@@ -98,7 +106,7 @@ private sort(nodes: Sample[]): Sample[] {
 
 }
 interface SampleItem {
-        path: string;
+        Path: string;
         example: Inner;
 }
 
@@ -117,7 +125,9 @@ export class Sample extends vscode.TreeItem {
         
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public description: string,
+        public val?: SampleItem,
         public children? : Map<string,Sample>,
+        public contextValue: string = "sample",
         public readonly command?: vscode.Command,
     
     ) {
@@ -125,7 +135,7 @@ export class Sample extends vscode.TreeItem {
     }
 
     get tooltip(): string {
-        return this.label;
+        return this.description;
     }
 
 
@@ -134,6 +144,5 @@ export class Sample extends vscode.TreeItem {
         dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
     };
 
-    contextValue = 'sample';
 
 }
