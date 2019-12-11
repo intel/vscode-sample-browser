@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
 
 import * as path from 'path';
+import * as os from 'os';
 
 import * as request from 'request-promise-native';
 import * as spawn from 'promisify-child-process';
 import { reporters } from 'mocha';
 import { map } from 'bluebird';
+import { openSync } from 'fs';
 
 export class SampleProvider implements vscode.TreeDataProvider<Sample> {
 
@@ -40,11 +42,20 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
         
         
     }
+    show(sample: SampleItem): void {
+        let p = path.join(os.tmpdir(), os.userInfo().username ,sample.Path);
+
+        spawn.exec("oneapi-cli create "+sample.Path+" "+p).then(output => {
+            let a = vscode.Uri.parse("file://" + p +"/README.md");
+            vscode.commands.executeCommand("markdown.showPreview", a);
+        });
+    }
 
     private addSample(key: string[], pos : Map<string, Sample>, ins : SampleItem) {
         if (key.length < 1) {
             //Add Sample
-            var add = new Sample(ins.example.Name,vscode.TreeItemCollapsibleState.None, ins.example.Description,ins);
+            var add = new Sample(ins.example.Name,vscode.TreeItemCollapsibleState.None, ins.example.Description,ins,undefined,undefined,
+            {command: "oneapisamples.show", title: "asd", arguments: [ins]});
             pos.set(ins.Path, add);
             return;
         }
@@ -94,7 +105,6 @@ private async getIndex(): Promise<Sample[]> {
     }    
     let r = Array.from(root.values());
     return this.sort(r);
- 
 }
 
 private sort(nodes: Sample[]): Sample[] {
@@ -104,7 +114,7 @@ private sort(nodes: Sample[]): Sample[] {
 }
 
 }
-interface SampleItem {
+export interface SampleItem {
         Path: string;
         example: Inner;
 }
@@ -113,6 +123,7 @@ interface Inner {
     Name: string;
     Description: string;
     Categories: string[];
+    sample_readme_uri: string;
 
 }
 
