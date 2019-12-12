@@ -7,7 +7,7 @@ import * as request from 'request-promise-native';
 import * as spawn from 'promisify-child-process';
 import { reporters } from 'mocha';
 import { map } from 'bluebird';
-import { openSync } from 'fs';
+import { openSync, fstat } from 'fs';
 
 export class SampleProvider implements vscode.TreeDataProvider<Sample> {
 
@@ -34,7 +34,7 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
         var val = sample.val;
         vscode.window.showSaveDialog({saveLabel: "Create",}).then(folder => {
             if (val && folder) {
-                spawn.exec("oneapi-cli create "+val.Path+" "+folder.path).then(output => {
+                spawn.exec("oneapi-cli create "+val.Path+" "+folder.fsPath).then(output => {
                     vscode.commands.executeCommand("vscode.openFolder",folder, true);
                 }) ; //folder is a uri, so just send the path :D
             }
@@ -46,8 +46,8 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
         let p = path.join(os.tmpdir(), os.userInfo().username ,sample.Path);
 
         spawn.exec("oneapi-cli create "+sample.Path+" "+p).then(output => {
-            let a = vscode.Uri.parse("file://" + p +"/README.md");
-            vscode.commands.executeCommand("markdown.showPreview", a);
+            let a =  path.join(p,"README.md");
+            vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(a),);
         });
     }
 
@@ -90,7 +90,6 @@ private async getSortedChildren(node: Sample): Promise<Sample[]> {
 private async getIndex(): Promise<Sample[]> {
     let resp : SampleItem[] = await spawn.exec('oneapi-cli list -o cpp -j', {}).then(output => JSON.parse(<string>output.stdout));
     var Items : Sample[] = new Array(resp.length);
-
 
     var root = new Map<string,Sample>();
 
