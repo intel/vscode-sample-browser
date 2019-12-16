@@ -3,12 +3,12 @@
 	"displayName": "vscode-oneapi-sample",
 	"description": "oneAPI Sample Browser",
 	"publisher": "intel-corporation",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.35.0"
+		"vscode": "^1.40.0"
 	},
-	"enableProposedApi": true,
+	"enableProposedApi": false,
 	"categories": [
 		"Other"
 	],
@@ -70,7 +70,6 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test": "npm run compile && node ./node_modules/vscode/bin/test",
 		"package": "vsce package --yarn --baseContentUrl https://gitlab.devtools.intel.com/sip-oneapi/vscode-oneapi-sample/raw/master/"
 	},
@@ -78,10 +77,11 @@
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.14.9",
 		"@types/request-promise": "^4.1.44",
+		"@types/vscode": "1.40",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.1",
-		"vsce": "^1.70.0",
-		"vscode": "^1.1.28"
+		"vsce": "^1.71.0",
+		"vscode-test": "^1.2.3"
 	},
 	"dependencies": {
 		"@types/request-promise-native": "^1.0.16",

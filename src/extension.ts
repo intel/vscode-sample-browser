@@ -4,11 +4,10 @@ import { SampleProvider, Sample, SampleItem } from './upmData';
 
 export function activate(context: vscode.ExtensionContext) {
 		const upmData = new SampleProvider();
-		vscode.window.registerTreeDataProvider('upmLibs', upmData);
+		//vscode.window.registerTreeDataProvider('upmLibs', upmData);
+		vscode.window.createTreeView("upmLibs", {treeDataProvider: upmData, showCollapseAll: true});
 		vscode.commands.registerCommand('oneapisamples.create', (sample: Sample) => upmData.create(sample));
-
 		vscode.commands.registerCommand('oneapisamples.show', (sample: SampleItem) => upmData.show(sample));
-
 }
 
 export function deactivate() {}

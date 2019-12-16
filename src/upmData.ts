@@ -17,9 +17,11 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
     private _onDidChangeTreeData: vscode.EventEmitter<Sample | undefined> = new vscode.EventEmitter<Sample | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Sample | undefined> = this._onDidChangeTreeData.event;
     
+    
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
+        
     }
 
     getTreeItem(element: Sample): vscode.TreeItem {
@@ -66,7 +68,7 @@ export class SampleProvider implements vscode.TreeDataProvider<Sample> {
         var cKey = key[0];
         if (!pos.has(key[0])) {
             var newMap = new Map<string, Sample>();
-            var addCat = new Sample(key[0],vscode.TreeItemCollapsibleState.Collapsed, "",undefined, newMap, "cat");
+            var addCat = new Sample(key[0],vscode.TreeItemCollapsibleState.Expanded, "",undefined, newMap, "cat");
 
             pos.set(key[0],addCat);
         }
