@@ -2,17 +2,21 @@ import * as vscode from 'vscode';
 
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 
 import * as request from 'request-promise-native';
 import * as spawn from 'promisify-child-process';
 import { reporters } from 'mocha';
 import { map } from 'bluebird';
 import { openSync, fstat } from 'fs';
+import { RequiredUriUrl } from 'request';
+import { URL } from 'url';
 
 export class SampleProvider implements vscode.TreeDataProvider<Sample> {
 
     private _onDidChangeTreeData: vscode.EventEmitter<Sample | undefined> = new vscode.EventEmitter<Sample | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Sample | undefined> = this._onDidChangeTreeData.event;
+    
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
@@ -87,8 +91,86 @@ private async getSortedChildren(node: Sample): Promise<Sample[]> {
     return new Array();
 }
 
+private async downloadCLI(): Promise<boolean> {
+
+    //https://gitlab.devtools.intel.com/api/v4/projects/32487/jobs/artifacts/develop/raw/linux/bin/oneapi-cli?job=sign
+
+    const base : string = "https://gitlab.devtools.intel.com/api/v4/projects/32487/jobs/artifacts/r2021.1-beta04/raw/";
+    const sBase : string = "/bin/";
+    const options : string = "?job=sign";
+
+    let url : string = "";
+    let binName : string = "oneapi-cli";
+
+    switch(os.platform()) {
+        case "linux": {
+            url = base + "linux" + sBase + binName + options;
+            vscode.window.showInformationMessage(url);
+            break;
+        }
+        case "win32": {
+            binName = "oneapi-cli.exe";
+            url = base + "win" + sBase + binName + options;
+            vscode.window.showInformationMessage(url);
+            break;
+        }
+        case "darwin": {
+            url = base + "osx" + sBase + binName + options;
+            break;
+        }
+        default: {
+            return false; //Dump out early we have no business here right now!
+        }
+    }
+
+    let res: boolean = await request.get({uri: url, resolveWithFullResponse: true, encoding: null}).then(async (response: request.FullResponse) => {
+
+        let cliPath = path.join(os.homedir(), ".oneapi-cli", binName);
+        await fs.promises.writeFile(cliPath, response.body).then(async a  => {
+                if (os.platform() !== "win32") {
+                    fs.chmodSync(cliPath, 0o755);
+                }
+            });
+        return true;
+    });
+
+    return false;
+}
+
 private async getIndex(): Promise<Sample[]> {
-    let resp : SampleItem[] = await spawn.exec('oneapi-cli list -o cpp -j', {}).then(output => JSON.parse(<string>output.stdout));
+
+    let CLIrdy : boolean = false;
+    await spawn.exec('oneapi-cli version', {}).then(output =>{
+        CLIrdy = true;
+        return;
+    }).catch(async error => { // If we have a problem lets get the CLI from CI/GITHUB/GITLAB
+        await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it",{},"Yes", "No").then(async sel => {
+            let s : string = <string>sel;
+            if (s === "Yes") {
+                let res : boolean = await this.downloadCLI();
+                CLIrdy = true;
+                let cliPath = path.join(os.homedir(), ".oneapi-cli");
+                if (os.platform() === "win32") {
+                    process.env.PATH = cliPath +";"+ process.env.PATH;
+                } else {
+                    process.env.PATH = cliPath +":"+ process.env.PATH;
+
+                }
+               return;
+            }
+            
+        });
+        return;       
+    });
+    if (!CLIrdy) {
+        let bla = new Sample("Samples are not gonna happen",vscode.TreeItemCollapsibleState.None, "",undefined, undefined, "blankO");
+        return [bla];
+
+    }
+
+    //vscode.window.showInformationMessage(<string>process.env.PATH);
+
+    let resp : SampleItem[] = await spawn.exec('oneapi-cli list -o cpp -j', {}).then(output => JSON.parse(<string>output.stdout)).catch();
     var Items : Sample[] = new Array(resp.length);
 
     var root = new Map<string,Sample>();

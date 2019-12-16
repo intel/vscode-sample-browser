@@ -3,7 +3,7 @@
 	"displayName": "vscode-oneapi-sample",
 	"description": "oneAPI Sample Browser",
 	"publisher": "intel-corporation",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.35.0"
@@ -20,7 +20,7 @@
 		"commands": [
 			{
 				"command": "upmLibs.addEntry",
-				"title": "Add",
+				"title": "Fake Button",
 				"when": "false"
 			},
 			{
@@ -86,9 +86,12 @@
 	"dependencies": {
 		"@types/request-promise-native": "^1.0.16",
 		"promisify-child-process": "^3.1.1",
-		"request-promise-native": "^1.0.7"
+		"request": "^2.88.0",
+		"request-promise-native": "^1.0.8"
 	},
-	"extensionDependencies": ["vscode.markdown-language-features"],
+	"extensionDependencies": [
+		"vscode.markdown-language-features"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://gitlab.devtools.intel.com/sip-oneapi/vscode-oneapi-sample.git"
