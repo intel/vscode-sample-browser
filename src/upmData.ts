@@ -107,13 +107,11 @@ private async downloadCLI(): Promise<boolean> {
     switch(os.platform()) {
         case "linux": {
             url = base + "linux" + sBase + binName + options;
-            vscode.window.showInformationMessage(url);
             break;
         }
         case "win32": {
             binName = "oneapi-cli.exe";
             url = base + "win" + sBase + binName + options;
-            vscode.window.showInformationMessage(url);
             break;
         }
         case "darwin": {
@@ -169,8 +167,6 @@ private async getIndex(): Promise<Sample[]> {
         return [bla];
 
     }
-
-    //vscode.window.showInformationMessage(<string>process.env.PATH);
 
     let resp : SampleItem[] = await spawn.exec('oneapi-cli list -o cpp -j', {}).then(output => JSON.parse(<string>output.stdout)).catch();
     var Items : Sample[] = new Array(resp.length);
