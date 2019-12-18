@@ -3,7 +3,7 @@
 	"displayName": "vscode-oneapi-sample",
 	"description": "oneAPI Sample Browser",
 	"publisher": "intel-corporation",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.40.0"
