@@ -125,7 +125,11 @@ private async downloadCLI(): Promise<boolean> {
 
     let res: boolean = await request.get({uri: url, resolveWithFullResponse: true, encoding: null}).then(async (response: request.FullResponse) => {
 
-        let cliPath = path.join(os.homedir(), ".oneapi-cli", binName);
+        let installdir = path.join(os.homedir(), ".oneapi-cli");
+        if (!fs.existsSync(installdir)){
+            fs.mkdirSync(installdir);
+        }
+        let cliPath = path.join(installdir, binName);
         await fs.promises.writeFile(cliPath, response.body).then(async a  => {
                 if (os.platform() !== "win32") {
                     fs.chmodSync(cliPath, 0o755);
@@ -137,6 +141,13 @@ private async downloadCLI(): Promise<boolean> {
     return false;
 }
 
+private addPath(path: string): void {
+    if (os.platform() === "win32") {
+        process.env.PATH = path +";"+ process.env.PATH;
+    } else {
+        process.env.PATH = path +":"+ process.env.PATH;
+    }
+}
 private async getIndex(): Promise<Sample[]> {
 
     let CLIrdy : boolean = false;
@@ -144,18 +155,20 @@ private async getIndex(): Promise<Sample[]> {
         CLIrdy = true;
         return;
     }).catch(async error => { // If we have a problem lets get the CLI from CI/GITHUB/GITLAB
+        let cliPath = path.join(os.homedir(), ".oneapi-cli");
+        if (fs.existsSync(path.join(cliPath, "oneapi-cli"))) {
+            CLIrdy = true;
+            this.addPath(cliPath);
+            return; // Lets skip the donwload its already there. HACK!!!!
+
+        }
         await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it",{},"Yes", "No").then(async sel => {
             let s : string = <string>sel;
             if (s === "Yes") {
                 let res : boolean = await this.downloadCLI();
                 CLIrdy = true;
-                let cliPath = path.join(os.homedir(), ".oneapi-cli");
-                if (os.platform() === "win32") {
-                    process.env.PATH = cliPath +";"+ process.env.PATH;
-                } else {
-                    process.env.PATH = cliPath +":"+ process.env.PATH;
-
-                }
+                this.addPath(cliPath);
+                
                return;
             }
             
