@@ -1,13 +1,14 @@
 
 import * as vscode from 'vscode';
-import { SampleProvider, Sample, SampleItem } from './upmData';
+import { SampleProvider, SampleTreeItem } from './sampleData';
+import {SampleContainer} from './oneapicli';
 
 export function activate(context: vscode.ExtensionContext) {
-		const upmData = new SampleProvider();
+		const sampleData = new SampleProvider();
 		//vscode.window.registerTreeDataProvider('upmLibs', upmData);
-		vscode.window.createTreeView("upmLibs", {treeDataProvider: upmData, showCollapseAll: true});
-		vscode.commands.registerCommand('oneapisamples.create', (sample: Sample) => upmData.create(sample));
-		vscode.commands.registerCommand('oneapisamples.show', (sample: SampleItem) => upmData.show(sample));
+		vscode.window.createTreeView("oneapisamples.cpp", {treeDataProvider: sampleData, showCollapseAll: true});
+		vscode.commands.registerCommand('oneapisamples.create', (sample: SampleTreeItem) => sampleData.create(sample));
+		vscode.commands.registerCommand('oneapisamples.show', (sample: SampleContainer) => sampleData.show(sample));
 }
 
 export function deactivate() {}
