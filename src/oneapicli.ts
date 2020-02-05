@@ -9,36 +9,36 @@ import * as semver from 'semver';
 /** 
 OneAPI-Interface in Typescript
 
-                                     Start
-                                       +
-                                       |
-               +-----------------------v---------------------------+
-               |             "oneapi-cli version" ran              |
-+--+---------->+  (could be an explict path, or uses first on PATH)|
-|  |           +--------------------------------------+------------+
-|  |                                                  |
-|  |Found                 Not Found                   | Found
-|  |Add to PATH                                       | Version on STDOUT
-|  |                                                  v
-|  |       +---------------------------+     +--------+-----------------+
-|  |       |Check in $HOME/.oneapi-cli |     | Check version is greater |  Compatible
-|  +-------+                           |     | than minumum             +---+
-|          +----------+----------------+     +--------------------------+   |
-|                     |                                                     |
-|                     v  Not found                                +---------v----+
-|       +---------------------------------+   No                  |Success. Done!|
-|       | Ask User for download permission+---+                   +--------------+
-|       +---------------------------------+   |
-|                                             v
-|                                         +---+------+
-|                                         | !Failed! |
-| Download Good.                          +---+------+
-| Add to PATH                                 ^
-|                                             |
-|      +---------------------------------+    | Download failure
-+------+ Downloaded to $HOME/.oneapi-cli +----+
-       |                                 |
-       +---------------------------------+
+                                  Start
+                                     +
+                                     |
+             +-----------------------v---------------------------+
+             |             "oneapi-cli version" ran              |
+ +---------->+  (could be an explict path, or uses first on PATH)|
+ |           +--------------------------------------+------------+
+ |                                                  |
+ |Found                 Not Found                   | Found
+ |Explict path to bin set                           | Version on STDOUT
+ |                                                  v
+ |       +---------------------------+     +--------+-----------------+
+ |       |Check in $HOME/.oneapi-cli |     | Check version is greater |  Compatible
+ +-------+                           |     | than minumum             +---+
+         +----------+----------------+     +--------------------------+   |
+                    |                                                     |
+                    v  Not found                                +---------v----+
+      +---------------------------------+   No                  |Success. Done!|
+      | Ask User for download permission+---+                   +---+----------+
+      +---------------------------------+   |                       ^
+                                            v                       |Download good.
+                                        +---+------+                |Explict path to bin set
+                                        | !Failed! |                |
+                                        +---+------+                |
+                                            ^                       |
+                                            |                       |
+     +---------------------------------+    | Download failure      |
+     + Downloaded to $HOME/.oneapi-cli +----+                       |
+     |                                 +----------------------------+
+     +---------------------------------+  
 */
 
 const cliBinName = "oneapi-cli";
