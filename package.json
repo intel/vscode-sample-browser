@@ -3,7 +3,7 @@
 	"displayName": "Intel oneAPI Sample Browser",
 	"description": "Intel oneAPI code samples made easily downloadable",
 	"publisher": "intel-corporation",
-	"version": "0.0.12",
+	"version": "0.0.14",
 	"license": "MIT",
 	"icon": "media/icon.png",
 	"preview": true,
@@ -29,7 +29,7 @@
 			},
 			{
 				"command": "intel.oneAPISamples.refresh",
-				"title": "Intel oneAPI Refresh/update sample tree",
+				"title": "Intel oneAPI: Refresh/update sample tree",
 				"when": "false",
 				"icon": {
 					"light": "resources/light/refresh.svg",

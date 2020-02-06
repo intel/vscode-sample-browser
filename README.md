@@ -1,10 +1,32 @@
-# vscode-oneapi-sample
+# Intel® oneAPI Sample Browser
 
-A pretty straightforward extension that calls `oneapi-cli` for the index of samples and displays them in a tree view
+## Draft - Some content here needs updating with final logos etc. (tcingleb)
 
-## Getting started
-Install Visual Studio Code (at least version 1.34) and open this project within it. You should be able to just hit F5 at that point.
+A simple extension for viewing code samples availible for Intel oneAPI.
+Leverages cross platform `oneapi-cli` to get the sample index and contents.
 
-You may also need `npm` installed, and of course `node`
+![Gif of the extenison in action](demo-ext.gif)
+
+## Functionality
+
+* View availible samples in Intel oneAPI, and lets you download them.
+* Check dependecies are installed for sample
+
+## Contrbuting 
+Install Visual Studio Code (at least version 1.40) and open this project within it.
+You may also need `yarn` installed, and of course `node + npm`
+
+```bash
+npm install -g yarn
+yarn install
+code .
+```
+
+At this point you should be able to run the extension in the "Extension Development Host"
+
 
 ![Screenshot of the extenison in action](screenshot.png)
+
+## License
+This extension is released under MIT.
+Some resources such as icons may have other applicable liceses
