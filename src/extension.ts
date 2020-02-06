@@ -9,6 +9,9 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.createTreeView("oneapisamples.cpp", {treeDataProvider: sampleData, showCollapseAll: true});
 		vscode.commands.registerCommand('oneapisamples.create', (sample: SampleTreeItem) => sampleData.create(sample));
 		vscode.commands.registerCommand('oneapisamples.show', (sample: SampleContainer) => sampleData.show(sample));
+		vscode.commands.registerCommand('oneapisamples.clean', () => sampleData.clean());
+		vscode.commands.registerCommand('oneapisamples.refresh', () => sampleData.refresh());
+
 }
 
 export function deactivate() {}

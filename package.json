@@ -1,10 +1,11 @@
 {
 	"name": "vscode-oneapi-sample",
-	"displayName": "vscode-oneapi-sample",
-	"description": "oneAPI Sample Browser",
+	"displayName": "Intel oneAPI Sample Browser",
+	"description": "Intel oneAPI Sample Browser",
 	"publisher": "intel-corporation",
-	"version": "0.0.6",
+	"version": "0.0.8",
 	"license": "MIT",
+	"preview": true,
 	"engines": {
 		"vscode": "^1.40.0"
 	},
@@ -19,13 +20,26 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "upmLibs.addEntry",
-				"title": "Fake Button",
+				"command": "oneapisamples.clean",
+				"title": "Clean local sample cache and refresh",
 				"when": "false"
 			},
 			{
+				"command": "oneapisamples.refresh",
+				"title": "Refresh/update sample tree",
+				"when": "false",
+				"icon": {
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
+				  }
+			},
+			{
 				"command": "oneapisamples.create",
-				"title": "Create"
+				"title": "Create",
+				"icon": {
+					"light": "resources/light/create.svg",
+					"dark": "resources/dark/create.svg"
+				  }
 			}
 		],
 		"viewsContainers": {
@@ -41,7 +55,7 @@
 			"upmView": [
 				{
 					"id": "oneapisamples.cpp",
-					"name": "CPP"
+					"name": "View"
 				}
 			]
 		},
@@ -50,15 +64,53 @@
 				{
 					"command": "oneapisamples.create",
 					"when": "view == oneapisamples.cpp && viewItem == sample"
+				},
+				{
+					"command": "oneapisamples.create",
+					"when": "view == oneapisamples.cpp && viewItem == sample",
+					"group": "inline"
 				}
 			],
+			"view/title": [
+				{
+				  "command": "oneapisamples.refresh",
+				  "when": "view == oneapisamples.cpp",
+				  "group": "navigation"
+				}
+			  ],
 			"commandPalette": [
 				{
 					"command": "oneapisamples.create",
 					"when": "false"
 				}
 			]
-		}
+		},
+		"configuration": {
+			"title": "Intel oneAPI Sample Browser",
+			"properties": {
+			  "inteloneapi.samples.baseURL": {
+				"type": "string",
+				"default": null,
+				"description": "Base URL for the samples"
+			  },
+			  "inteloneapi.samples.pathToCLI": {
+				"type": "string",
+				"default": null,
+				"description": "Specifies an aboslute path for a 'oneapi-cli' to use for sample acquisition"
+			  },
+			  "inteloneapi.samples.skipDependencyChecks": {
+				"type": "boolean",
+				"default": false,
+				"description": "Skips checking for install dependency a sample may require"
+			  },
+			  "inteloneapi.samples.sampleLanguage": {
+				"type": "string",
+				"default": "cpp",
+				"description": "Specifies the langauge for the sample tree to use"
+			  }
+			  
+			}
+		  }
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

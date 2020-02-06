@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2020 Intel Corporation
+ * Licensed under the MIT License. See the project root LICENSE
+ * 
+ * SPDX-License-Identifier: MIT
+ */
+
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -41,11 +48,11 @@ OneAPI-Interface in Typescript
      +---------------------------------+  
 */
 
+//Expeted CLI binary name
 const cliBinName = "oneapi-cli";
 
-
 //Minimum support version of the CLI that supports this interface
-const requiredCLIVersion = "0.0.11";
+const requiredCLIVersion = "0.0.13";
 
 export class OneAPICLI {
 
@@ -53,7 +60,8 @@ export class OneAPICLI {
 
     constructor(
         private downloadPermissionCb: () => Promise<boolean>,
-        private cli? :string,
+        public cli? :string,
+        public baseURL?: string,
     ) {
         if ((!cli) || cli === "") {
             this.cli = cliBinName;
@@ -64,6 +72,7 @@ export class OneAPICLI {
             let version = await this.getCLIVersion(<string>this.cli).catch();
             if (version && this.compareVersion(version)) {
                 resolve();
+                return;
             }
             let cliHomePath = path.join(os.homedir(), ".oneapi-cli", cliBinName);
 
@@ -72,6 +81,7 @@ export class OneAPICLI {
                 if (version && this.compareVersion(version)) {
                     this.cli = cliHomePath;
                     resolve();
+                    return;
                 }
             }
 
@@ -80,6 +90,7 @@ export class OneAPICLI {
                 if (await this.downloadCLI().catch(() => {reject();})) {
                     this.cli = cliHomePath;
                     resolve();
+                    return;
                 }
 
             }
@@ -91,7 +102,33 @@ export class OneAPICLI {
     }
 
     public async FetchSamples(language : string):Promise<SampleContainer[]> {
-        return await child.exec(this.cli + ' list -j -o ' + language, {}).then(output => JSON.parse(<string>output.stdout)).catch();
+        let extraArg: string = "";
+        if ((this.baseURL) && this.baseURL !== "") {
+            extraArg = ' --url="' + this.baseURL + '"'; //rembember an extra space :/
+        }
+        return await child.exec(this.cli + ' list -j -o ' + language + extraArg, {}).then(output => JSON.parse(<string>output.stdout)).catch();
+    }
+
+    public async CleanCache() {
+        await child.exec(this.cli + ' clean', {});
+    }
+
+
+    public async CheckDependencies(deps: string): Promise<string> {
+        let response: string = "";
+       
+        
+        await child.exec(this.cli + ' check --deps="' + deps +'"', {}).then(output => {
+            response = <string> output.stdout;
+        }).catch(output => {
+            response = output.stdout;
+            return;
+            
+
+        });
+
+        return response;
+
     }
 
     public CreateSample(sample: string, folder: string) {
@@ -101,15 +138,15 @@ export class OneAPICLI {
     //Return true if the version passed is greater than the min
     private compareVersion(version: string) {
     
-        let a = semver.gte(version, requiredCLIVersion);
-        return a;
+        let v = <string> semver.coerce(version)?.version; //Coerce into simple 0.0.0      
+        return semver.gte(v, requiredCLIVersion);
     }
 
     private async getCLIVersion(exe:string ): Promise<string> {
         let version: string = "";
         try {
              version  = <string> await child.exec(exe + " version", {}).then(output =>{
-                return semver.clean(<string>output.stdout);
+                return semver.clean(<string>output.stdout, {includePrerelease: true});
             });
 
         }
@@ -183,6 +220,7 @@ export interface Sample {
     name: string;
     description: string;
     categories: string[];
+    dependencies: string[];
     sample_readme_uri: string;
 
 }
