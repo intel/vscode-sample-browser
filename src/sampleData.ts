@@ -36,7 +36,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             this.cli.cli = cliPath;
         }}
         let baseURL : string |undefined = config.get('baseURL');
-        if (baseURL) {
+        if (baseURL) { //todo reset
             this.cli.baseURL = baseURL;
         }        
     }
@@ -82,16 +82,10 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
                         //this.outChannel.hide();
                         return;
                     }
-                    await vscode.window.showWarningMessage("The Sample you are creating has unmet dependencies. Do you want to", "Details", "Cancel", "Continue Creation")
+                    //"The Sample you are creating has unmet dependencies. Do you want to"
+                    await vscode.window.showWarningMessage(output, "Cancel", "Continue")
                         .then(async selected => {
-                            if (selected === "Details") {
-                                await vscode.window.showWarningMessage(output, "Cancel", "Continue").then(selected => {
-                                    if (selected === "Cancel") {
-                                        cancel = true;
-                                    }
-                                });
-                                return;
-                            }
+                            
                             if (selected === "Cancel") {
 
                                 cancel = true;
@@ -153,7 +147,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         if (key.length < 1) {
             //Add Sample
             var add = new SampleTreeItem(ins.example.name, vscode.TreeItemCollapsibleState.None, ins.example.description, ins, undefined, undefined,
-                { command: "oneapisamples.show", title: "asd", arguments: [ins] });
+                { command: "intel.oneAPISamples.show", title: "", arguments: [ins] });
             pos.set(ins.path, add);
             return;
         }
