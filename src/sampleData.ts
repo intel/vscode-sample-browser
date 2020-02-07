@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { OneAPICLI, SampleContainer } from './oneapicli';
+import { OneApiCli, SampleContainer } from './oneapicli';
 import { isRegExp } from 'util';
 import { fstat } from 'fs';
 
@@ -13,9 +13,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<SampleTreeItem | undefined> = new vscode.EventEmitter<SampleTreeItem | undefined>();
     readonly onDidChangeTreeData: vscode.Event<SampleTreeItem | undefined> = this._onDidChangeTreeData.event;
 
-    private cli = new OneAPICLI(this.askDownloadPermission);
-    private outChannel = vscode.window.createOutputChannel("Intel oneAPI Sample");
-    private language : string = "";
+    private cli = new OneApiCli(this.askDownloadPermission);
+    private language: string = "";
 
     constructor() {
         this.updateCLIConfig();
@@ -23,36 +22,35 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     private updateCLIConfig() {
         let config = vscode.workspace.getConfiguration("inteloneapi.samples");
-        let l: string | undefined= config.get('sampleLanguage');
+        let l: string | undefined = config.get('sampleLanguage');
 
         if (!l || l === "") {
             vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate");
         }
         this.language = <string>l;
 
-        
-        let cliPath :string | undefined = config.get('pathToCLI');
-        if (cliPath) {{
-            this.cli.cli = cliPath;
-        }}
-        let baseURL : string |undefined = config.get('baseURL');
+
+        let cliPath: string | undefined = config.get('pathToCLI');
+        if (cliPath) {
+            {
+                this.cli.cli = cliPath;
+            }
+        }
+        let baseURL: string | undefined = config.get('baseURL');
         if (baseURL) { //todo reset
             this.cli.baseURL = baseURL;
-        }        
+        }
     }
 
 
-    refresh(): void {
-        this.updateCLIConfig();
+    async refresh(): Promise<void> {
+        await this.updateCLIConfig();
         this._onDidChangeTreeData.fire();
 
     }
-    clean(): void {
-
-        this.cli.CleanCache();
-        this.cli.baseURL = "http://iotdk-ninja.amr.corp.intel.com/samples-staging/iss2019-update3/";
+    async clean(): Promise<void> {
+        await this.cli.cleanCache();
         this.refresh();
-
     }
 
 
@@ -70,77 +68,59 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     async create(sample: SampleTreeItem): Promise<void> {
         var val = sample.val;
-        let skipCheck : boolean = <boolean> vscode.workspace.getConfiguration("inteloneapi.samples").get('skipDependencyChecks');
+
+        //Dependency Check 
+        let skipCheck: boolean = <boolean>vscode.workspace.getConfiguration("inteloneapi.samples").get('skipDependencyChecks');
         if (val?.example.dependencies && !skipCheck) {
             if (!process.env.ONEAPI_ROOT) {
-                vscode.window.showWarningMessage("FYI, this sample has a depedency but ONEAPI_ROOT is not set so we can not check if the depdencies are met");
+                vscode.window.
+                    showWarningMessage("FYI, This sample has a depedency but ONEAPI_ROOT is not set so we can not check if the depdencies are met");
 
             } else {
-                let cancel: boolean = false;
-                await this.cli.CheckDependencies(val.example.dependencies.join()).then(async output => {
-                    if (output === "") {
-                        //this.outChannel.hide();
+                let output = await this.cli.checkDependencies(val.example.dependencies.join());
+                if (output !== "") {
+                    //Just show output from the CLI as other Browser currently do.
+                    let r = await vscode.window.showWarningMessage(output, "Cancel", "Continue");
+                    if (r === "Cancel") {
                         return;
                     }
-                    //"The Sample you are creating has unmet dependencies. Do you want to"
-                    await vscode.window.showWarningMessage(output, "Cancel", "Continue")
-                        .then(async selected => {
-                            
-                            if (selected === "Cancel") {
-
-                                cancel = true;
-                                return;
-                            }
-
-
-                        });
-                });
-                if (cancel) {
-                    return;
                 }
             }
-
-
         }
 
-
-
-        vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false }).then(folder => {
-            if (val && folder && folder[0]) {
-                this.cli.CreateSample(val.path, folder[0].fsPath).then(() => {
-                    vscode.commands.executeCommand("vscode.openFolder", folder[0], true);
-
-
-                });
-
+        let folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
+        if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
+            try {
+                await this.cli.createSample(val.path, folder[0].fsPath);
             }
-        });
-        //vscode.window.showSaveDialog({saveLabel: "Create",})
-
-
+            catch (e) {
+                vscode.window.showErrorMessage(`Sample Creation failed: ${e}`);
+                return;
+            }
+            vscode.commands.executeCommand("vscode.openFolder", folder[0], true);
+        }
     }
-    show(sample: SampleContainer): void {
+    async show(sample: SampleContainer): Promise<void> {
         let p = path.join(os.tmpdir(), os.userInfo().username, sample.path);
 
-        this.cli.CreateSample(sample.path, p).then(() => {
-            let a = path.join(p, "README.md");
-            vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(a));
+        try {
+            await this.cli.createSample(sample.path, p);
+        }
+        catch (e) {
+            vscode.window.showErrorMessage(e);
+            return;
+        }
 
-
-
-        });
-
+        let a = path.join(p, "README.md");
+        vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(a));
     }
 
     public async askDownloadPermission(): Promise<boolean> {
-        let dl: boolean = false;
-        await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it", {}, "Yes", "No").then(async sel => {
-            let s: string = <string>sel;
-            if (s === "Yes") {
-                dl = true;
-            }
-        });
-        return dl;
+        let sel = await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it", "Yes", "No");
+        if (sel && sel === "Yes") {
+            return true;
+        }
+        return false;
     }
 
     private addSample(key: string[], pos: Map<string, SampleTreeItem>, ins: SampleContainer) {
@@ -182,7 +162,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     private async getIndex(): Promise<SampleTreeItem[]> {
         let clierror: boolean = false;
-        await this.cli.Ready.catch(() => {
+        await this.cli.ready.catch(() => {
             clierror = true;
 
         });
@@ -193,8 +173,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
         }
 
-        
-        let resp: SampleContainer[] = await this.cli.FetchSamples(this.language);
+
+        let resp: SampleContainer[] = await this.cli.fetchSamples(this.language);
         var Items: SampleTreeItem[] = new Array(resp.length);
 
         var root = new Map<string, SampleTreeItem>();

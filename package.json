@@ -3,7 +3,7 @@
 	"displayName": "Intel oneAPI Sample Browser",
 	"description": "Intel oneAPI code samples made easily downloadable",
 	"publisher": "intel-corporation",
-	"version": "0.0.14",
+	"version": "0.0.15",
 	"license": "MIT",
 	"icon": "media/icon.png",
 	"preview": true,
@@ -60,7 +60,6 @@
 					"id": "intel.oneAPISamples.tree",
 					"name": "Samples"
 				}
-
 			]
 		},
 		"menus": {
@@ -136,11 +135,10 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"@types/request-promise-native": "^1.0.16",
+		"@types/node-fetch": "^2.5.4",
 		"@types/semver": "^7.1.0",
+		"node-fetch": "^2.6.0",
 		"promisify-child-process": "^3.1.1",
-		"request": "^2.88.0",
-		"request-promise-native": "^1.0.8",
 		"semver": "^7.1.2"
 	},
 	"extensionDependencies": [

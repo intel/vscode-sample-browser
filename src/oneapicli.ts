@@ -9,9 +9,12 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import fetch, { Request } from 'node-fetch';
+
 import * as child from 'promisify-child-process';
-import * as request from 'request-promise-native';
+
 import * as semver from 'semver';
+import { once } from 'events';
 
 /** 
 OneAPI-Interface in Typescript
@@ -52,11 +55,11 @@ OneAPI-Interface in Typescript
 const cliBinName = "oneapi-cli";
 
 //Minimum support version of the CLI that supports this interface
-const requiredCLIVersion = "0.0.13";
+const requiredCliVersion = "0.0.13";
 
-export class OneAPICLI {
+export class OneApiCli {
 
-    public Ready: Promise<any>;
+    public ready: Promise<any>;
 
     constructor(
         private downloadPermissionCb: () => Promise<boolean>,
@@ -66,7 +69,7 @@ export class OneAPICLI {
         if ((!cli) || cli === "") {
             this.cli = cliBinName;
         }
-        this.Ready = new Promise(async (resolve, reject) => {
+        this.ready = new Promise(async (resolve, reject) => {
             //This first attempt will either use the explict path try to use
             //a cli from the PATH
             let version = await this.getCLIVersion(<string>this.cli).catch();
@@ -87,17 +90,19 @@ export class OneAPICLI {
 
             //OK so no local verison found. Lets go download.
             if (await this.downloadPermissionCb()) {
-                if (await this.downloadCLI().catch(() => { reject(); })) {
-                    //this.cli = cliHomePath; will be done in the function instead
-
-                    version = await this.getCLIVersion(<string>this.cli);
-                    if (version && this.compareVersion(version)) {
-                        
-                        resolve();
-                        return;
-                    }
-                    //Somehow if we get here, the Downloaded CLI version is not compatible.
+                let path = await this.downloadCli();
+                if (path === "") {
+                    reject();
+                    return;
                 }
+                version = await this.getCLIVersion(path);
+                if (version && this.compareVersion(version)) {
+                    this.cli = path;
+                    resolve();
+                    return;
+                }
+                //Somehow if we get here, the Downloaded CLI version is not compatible.
+
             }
 
             reject();
@@ -106,24 +111,24 @@ export class OneAPICLI {
         return;
     }
 
-    public async FetchSamples(language: string): Promise<SampleContainer[]> {
+    public async fetchSamples(language: string): Promise<SampleContainer[]> {
         let extraArg: string = "";
         if ((this.baseURL) && this.baseURL !== "") {
-            extraArg = ' --url="' + this.baseURL + '"'; //rembember an extra space :/
+            extraArg = ` --url="${this.baseURL}"`;
         }
         return await child.exec(this.cli + ' list -j -o ' + language + extraArg, {}).then(output => JSON.parse(<string>output.stdout)).catch();
     }
 
-    public async CleanCache() {
+    public async cleanCache() {
         await child.exec(this.cli + ' clean', {});
     }
 
 
-    public async CheckDependencies(deps: string): Promise<string> {
+    public async checkDependencies(deps: string): Promise<string> {
         let response: string = "";
 
 
-        await child.exec(this.cli + ' check --deps="' + deps + '"', {}).then(output => {
+        let p = await child.exec(this.cli + ' check --deps="' + deps + '"', {}).then(output => {
             response = <string>output.stdout;
         }).catch(output => {
             response = output.stdout;
@@ -132,11 +137,12 @@ export class OneAPICLI {
 
         });
 
+
         return response;
 
     }
 
-    public CreateSample(sample: string, folder: string) {
+    public createSample(sample: string, folder: string) {
         return child.exec(this.cli + " create " + sample + " " + folder);
     }
 
@@ -144,7 +150,7 @@ export class OneAPICLI {
     private compareVersion(version: string) {
 
         let v = <string>semver.coerce(version)?.version; //Coerce into simple 0.0.0      
-        return semver.gte(v, requiredCLIVersion);
+        return semver.gte(v, requiredCliVersion);
     }
 
     private async getCLIVersion(exe: string): Promise<string> {
@@ -162,62 +168,67 @@ export class OneAPICLI {
 
     }
 
-    //Unused right now
-    private addPath(path: string): void {
-        if (os.platform() === "win32") {
-            process.env.PATH = path + ";" + process.env.PATH;
-        } else {
-            process.env.PATH = path + ":" + process.env.PATH;
-        }
-    }
+    private async downloadCli(): Promise<string> {
 
-    private async downloadCLI(): Promise<boolean> {
-
-        const base: string = "https://gitlab.devtools.intel.com/api/v4/projects/32487/jobs/artifacts/r2021.1-beta05/raw/";
-        const sBase: string = "/bin/";
-        const options: string = "?job=sign";
-
-        let url: string = "";
-        let bin: string = "";
+        let CiOs: string = ""; //OS String as in CI
+        let binSuffix: string = "";
 
         switch (os.platform()) {
             case "linux": {
-                url = base + "linux" + sBase + cliBinName + options;
-                bin = cliBinName;
+                CiOs = "linux";
                 break;
             }
             case "win32": {
-                url = base + "win" + sBase + cliBinName + ".exe" + options;
-                bin = cliBinName + ".exe";
+                CiOs = "win";
+                binSuffix = ".exe";
                 break;
             }
             case "darwin": {
-                url = base + "osx" + sBase + cliBinName + options;
+                CiOs = "osx";
                 break;
             }
             default: {
-                return false; //Dump out early we have no business here right now!
+                return ""; //Dump out early we have no business here right now!
             }
         }
 
-        let res: boolean = await request.get({ uri: url, resolveWithFullResponse: true, encoding: null }).then(async (response: request.FullResponse) => {
+        let OsBin: string = cliBinName + binSuffix;
+
+        let url: string =
+            `https://gitlab.devtools.intel.com/api/v4/projects/32487/jobs/artifacts/r2021.1-beta05/raw/${CiOs}/bin/${OsBin}?job=sign`;
+
 
             let installdir = path.join(os.homedir(), ".oneapi-cli");
-            if (!fs.existsSync(installdir)) {
-                fs.mkdirSync(installdir);
-            }
-            let cliPath = path.join(installdir, bin);
-            await fs.promises.writeFile(cliPath, response.body).then(async a => {
-                if (os.platform() !== "win32") {
-                    fs.chmodSync(cliPath, 0o755);
+            let cliPath = path.join(installdir, OsBin);
+
+            let downloadAndWrite = new Promise(async (resolve, reject) => {
+                try {
+                    let response = await fetch(url);
+                    let cliBody = fs.createWriteStream(cliPath, { mode: 0o755 });
+                    cliBody.on('finish', resolve);
+                    cliBody.on("error", reject);
+                    response.body.pipe(cliBody);
                 }
-
+                catch(e) {
+                    reject();
+                }            
             });
-            this.cli = cliPath; //set objects usage to what we have installd
-            return true;
-        });
 
-        return res;
+            await downloadAndWrite;
+
+
+
+            //let response: request.FullResponse = await request.get({ uri: url, resolveWithFullResponse: true, encoding: null });
+
+
+            //await fs.promises.mkdir(installdir, 0o755);
+
+            // await fs.promises.writeFile(cliPath, response.body);
+            // if (os.platform() !== "win32") {
+            //     await fs.promises.chmod(cliPath, 0o755);
+            // }
+            
+            return cliPath;
     }
 }
 
