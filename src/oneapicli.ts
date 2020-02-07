@@ -9,12 +9,9 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import fetch, { Request } from 'node-fetch';
-
+import fetch from 'node-fetch';
 import * as child from 'promisify-child-process';
-
 import * as semver from 'semver';
-import { once } from 'events';
 
 /** 
 OneAPI-Interface in Typescript
@@ -126,8 +123,6 @@ export class OneApiCli {
 
     public async checkDependencies(deps: string): Promise<string> {
         let response: string = "";
-
-
         let p = await child.exec(this.cli + ' check --deps="' + deps + '"', {}).then(output => {
             response = <string>output.stdout;
         }).catch(output => {
@@ -154,18 +149,16 @@ export class OneApiCli {
     }
 
     private async getCLIVersion(exe: string): Promise<string> {
-        let version: string = "";
         try {
-            version = <string>await child.exec(exe + " version", {}).then(output => {
-                return semver.clean(<string>output.stdout, { includePrerelease: true });
-            });
-
+            let a = await child.exec(exe + " version", {});
+            if (a.stdout) {
+                return <string>semver.clean(a.stdout.toString(), { includePrerelease: true });
+            }
+            return "";
         }
-
-        finally {
-            return version;
+        catch (e) {
+            return "";
         }
-
     }
 
     private async downloadCli(): Promise<string> {
@@ -198,37 +191,37 @@ export class OneApiCli {
             `https://gitlab.devtools.intel.com/api/v4/projects/32487/jobs/artifacts/r2021.1-beta05/raw/${CiOs}/bin/${OsBin}?job=sign`;
 
 
-            let installdir = path.join(os.homedir(), ".oneapi-cli");
-            let cliPath = path.join(installdir, OsBin);
+        let installdir = path.join(os.homedir(), ".oneapi-cli");
+        let cliPath = path.join(installdir, OsBin);
 
-            let downloadAndWrite = new Promise(async (resolve, reject) => {
-                try {
-                    let response = await fetch(url);
-                    let cliBody = fs.createWriteStream(cliPath, { mode: 0o755 });
-                    cliBody.on('finish', resolve);
-                    cliBody.on("error", reject);
-                    response.body.pipe(cliBody);
-                }
-                catch(e) {
-                    reject();
-                }            
-            });
+        let downloadAndWrite = new Promise(async (resolve, reject) => {
+            try {
+                let response = await fetch(url);
+                let cliBody = fs.createWriteStream(cliPath, { mode: 0o755 });
+                cliBody.on('finish', resolve);
+                cliBody.on("error", reject);
+                response.body.pipe(cliBody);
+            }
+            catch (e) {
+                reject();
+            }
+        });
 
-            await downloadAndWrite;
-
-
-
-            //let response: request.FullResponse = await request.get({ uri: url, resolveWithFullResponse: true, encoding: null });
+        await downloadAndWrite;
 
 
-            //await fs.promises.mkdir(installdir, 0o755);
 
-            // await fs.promises.writeFile(cliPath, response.body);
-            // if (os.platform() !== "win32") {
-            //     await fs.promises.chmod(cliPath, 0o755);
-            // }
-            
-            return cliPath;
+        //let response: request.FullResponse = await request.get({ uri: url, resolveWithFullResponse: true, encoding: null });
+
+
+        //await fs.promises.mkdir(installdir, 0o755);
+
+        // await fs.promises.writeFile(cliPath, response.body);
+        // if (os.platform() !== "win32") {
+        //     await fs.promises.chmod(cliPath, 0o755);
+        // }
+
+        return cliPath;
     }
 }
 

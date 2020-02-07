@@ -11,6 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('intel.oneAPISamples.show', (sample: SampleContainer) => sampleData.show(sample));
 		vscode.commands.registerCommand('intel.oneAPISamples.clean', () => sampleData.clean());
 		vscode.commands.registerCommand('intel.oneAPISamples.refresh', () => sampleData.refresh());
+
 }
 
 export function deactivate() {}
