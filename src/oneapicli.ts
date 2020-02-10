@@ -9,9 +9,14 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import util = require('util');
+const exec = util.promisify(require('child_process').exec);
+
+
 import fetch from 'node-fetch';
-import * as child from 'promisify-child-process';
+//import * as child from 'promisify-child-process';
 import * as semver from 'semver';
+import { ChildProcess } from 'child_process';
 
 /** 
 OneAPI-Interface in Typescript
@@ -113,32 +118,29 @@ export class OneApiCli {
         if ((this.baseURL) && this.baseURL !== "") {
             extraArg = ` --url="${this.baseURL}"`;
         }
-        return await child.exec(this.cli + ' list -j -o ' + language + extraArg, {}).then(output => JSON.parse(<string>output.stdout)).catch();
+        let output = await exec(this.cli + ' list -j -o ' + language + extraArg, {});
+        return JSON.parse(output.stdout);
     }
 
     public async cleanCache() {
-        await child.exec(this.cli + ' clean', {});
+        await exec(this.cli + ' clean', {});
     }
 
-
     public async checkDependencies(deps: string): Promise<string> {
-        let response: string = "";
-        let p = await child.exec(this.cli + ' check --deps="' + deps + '"', {}).then(output => {
-            response = <string>output.stdout;
-        }).catch(output => {
-            response = output.stdout;
-            return;
+        try {
+            // let p = await child.exec(this.cli + ' check --deps="' + deps + '"', {});
+            // //return <string>p.stdout;//
+            let p2 = await exec(this.cli + ' check --deps="' + deps + '"', {});
+            return <string>p2.stdout;
 
+        } catch (e) {
+            return e.stdout;
 
-        });
-
-
-        return response;
-
+        }
     }
 
     public createSample(sample: string, folder: string) {
-        return child.exec(this.cli + " create " + sample + " " + folder);
+        return exec(this.cli + " create " + sample + " " + folder);
     }
 
     //Return true if the version passed is greater than the min
@@ -150,7 +152,7 @@ export class OneApiCli {
 
     private async getCLIVersion(exe: string): Promise<string> {
         try {
-            let a = await child.exec(exe + " version", {});
+            let a = await exec(exe + " version", {});
             if (a.stdout) {
                 return <string>semver.clean(a.stdout.toString(), { includePrerelease: true });
             }

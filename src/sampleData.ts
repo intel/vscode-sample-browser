@@ -65,6 +65,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             return this.getIndex();
         }
     }
+    private linkify(text: string): string {
+        var r = /(https?:\/\/[^\s]+)/g;
+        return text.replace(r, url => {
+            return `[${url}](${url})`; //Vscode Markdown needs explict href and text
+        });
+    }
 
     async create(sample: SampleTreeItem): Promise<void> {
         var val = sample.val;
@@ -80,7 +86,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
                 let output = await this.cli.checkDependencies(val.example.dependencies.join());
                 if (output !== "") {
                     //Just show output from the CLI as other Browser currently do.
-                    let r = await vscode.window.showWarningMessage(output, "Cancel", "Continue");
+                    let r = await vscode.window.showWarningMessage(this.linkify(output), "Cancel", "Continue");
                     if (r === "Cancel") {
                         return;
                     }
