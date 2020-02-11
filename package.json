@@ -3,12 +3,12 @@
 	"displayName": "Intel oneAPI Sample Browser",
 	"description": "Intel oneAPI code samples made easily downloadable",
 	"publisher": "intel-corporation",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"license": "MIT",
 	"icon": "media/icon.png",
 	"preview": true,
 	"engines": {
-		"vscode": "^1.40.0"
+		"vscode": "^1.42.0"
 	},
 	"enableProposedApi": false,
 	"categories": [
@@ -31,18 +31,12 @@
 				"command": "intel.oneAPISamples.refresh",
 				"title": "Intel oneAPI: Refresh/update sample tree",
 				"when": "false",
-				"icon": {
-					"light": "resources/light/refresh.svg",
-					"dark": "resources/dark/refresh.svg"
-				}
+				"icon": "$(refresh)"
 			},
 			{
 				"command": "intel.oneAPISamples.create",
 				"title": "Create",
-				"icon": {
-					"light": "resources/light/create.svg",
-					"dark": "resources/dark/create.svg"
-				}
+				"icon": "$(add)"
 			}
 		],
 		"viewsContainers": {
@@ -127,10 +121,10 @@
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.14.9",
-		"@types/request-promise": "^4.1.45",
-		"@types/vscode": "1.40",
 		"@types/node-fetch": "^2.5.4",
+		"@types/request-promise": "^4.1.45",
 		"@types/semver": "^7.1.0",
+		"@types/vscode": "1.42",
 		"@typescript-eslint/eslint-plugin": "^2.19.0",
 		"@typescript-eslint/parser": "^2.19.0",
 		"eslint": "^6.8.0",
