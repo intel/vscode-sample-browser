@@ -5,6 +5,9 @@ import * as os from 'os';
 
 import { OneApiCli, SampleContainer } from './oneapicli';
 
+//Fairly basic regex for searching for URLs in a string.
+const r = /(https?:\/\/[^\s]+)/g;
+
 export class SampleTreeItem extends vscode.TreeItem {
 
 
@@ -85,7 +88,6 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         }
     }
     private linkify(text: string): string {
-        const r = /(https?:\/\/[^\s]+)/g;
         return text.replace(r, url => {
             return `[${url}](${url})`; //Vscode Markdown needs explict href and text
         });
@@ -116,7 +118,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
         if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
             try {
-                await this.cli.createSample(val.path, folder[0].fsPath);
+                this.cli.createSample(val.path, folder[0].fsPath);
             }
             catch (e) {
                 vscode.window.showErrorMessage(`Sample Creation failed: ${e}`);
@@ -142,10 +144,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     public async askDownloadPermission(): Promise<boolean> {
         const sel = await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it", "Yes", "No");
-        if (sel && sel === "Yes") {
-            return true;
-        }
-        return false;
+        return (sel === "Yes");
     }
 
     /**
