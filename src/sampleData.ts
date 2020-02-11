@@ -2,11 +2,30 @@ import * as vscode from 'vscode';
 
 import * as path from 'path';
 import * as os from 'os';
-import * as fs from 'fs';
 
 import { OneApiCli, SampleContainer } from './oneapicli';
-import { isRegExp } from 'util';
-import { fstat } from 'fs';
+
+export class SampleTreeItem extends vscode.TreeItem {
+
+
+    constructor(
+        public readonly label: string,
+
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public description: string,
+        public val?: SampleContainer,
+        public children?: Map<string, SampleTreeItem>,
+        public contextValue: string = "sample",
+        public readonly command?: vscode.Command,
+
+    ) {
+        super(label, collapsibleState);
+    }
+
+    get tooltip(): string {
+        return this.description;
+    }
+}
 
 export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
@@ -14,30 +33,30 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     readonly onDidChangeTreeData: vscode.Event<SampleTreeItem | undefined> = this._onDidChangeTreeData.event;
 
     private cli = new OneApiCli(this.askDownloadPermission);
-    private language: string = "";
+    private language = "";
 
     constructor() {
         this.updateCLIConfig();
     }
 
-    private updateCLIConfig() {
-        let config = vscode.workspace.getConfiguration("inteloneapi.samples");
-        let l: string | undefined = config.get('sampleLanguage');
+    private async updateCLIConfig(): Promise<void> {
+        const config = vscode.workspace.getConfiguration("inteloneapi.samples");
+        const languageValue: string | undefined = config.get('sampleLanguage');
 
-        if (!l || l === "") {
+        if (!languageValue || languageValue === "") {
             vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate");
         }
-        this.language = <string>l;
+        this.language = languageValue as string;
 
 
-        let cliPath: string | undefined = config.get('pathToCLI');
+        const cliPath: string | undefined = config.get('pathToCLI');
         if (cliPath) {
             {
                 this.cli.cli = cliPath;
             }
         }
-        let baseURL: string | undefined = config.get('baseURL');
-        if (baseURL) { //todo reset
+        const baseURL: string | undefined = config.get('baseURL');
+        if (baseURL) {
             this.cli.baseURL = baseURL;
         }
     }
@@ -66,27 +85,27 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         }
     }
     private linkify(text: string): string {
-        var r = /(https?:\/\/[^\s]+)/g;
+        const r = /(https?:\/\/[^\s]+)/g;
         return text.replace(r, url => {
             return `[${url}](${url})`; //Vscode Markdown needs explict href and text
         });
     }
 
     async create(sample: SampleTreeItem): Promise<void> {
-        var val = sample.val;
+        const val = sample.val;
 
         //Dependency Check 
-        let skipCheck: boolean = <boolean>vscode.workspace.getConfiguration("inteloneapi.samples").get('skipDependencyChecks');
+        const skipCheck: boolean = vscode.workspace.getConfiguration("inteloneapi.samples").get('skipDependencyChecks') as boolean;
         if (val?.example.dependencies && !skipCheck) {
             if (!process.env.ONEAPI_ROOT) {
                 vscode.window.
                     showWarningMessage("FYI, This sample has a depedency but ONEAPI_ROOT is not set so we can not check if the depdencies are met");
 
             } else {
-                let output = await this.cli.checkDependencies(val.example.dependencies.join());
+                const output = await this.cli.checkDependencies(val.example.dependencies.join());
                 if (output !== "") {
                     //Just show output from the CLI as other Browser currently do.
-                    let r = await vscode.window.showWarningMessage(this.linkify(output), "Cancel", "Continue");
+                    const r = await vscode.window.showWarningMessage(this.linkify(output), "Cancel", "Continue");
                     if (r === "Cancel") {
                         return;
                     }
@@ -94,7 +113,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             }
         }
 
-        let folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
+        const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
         if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
             try {
                 await this.cli.createSample(val.path, folder[0].fsPath);
@@ -107,7 +126,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         }
     }
     async show(sample: SampleContainer): Promise<void> {
-        let p = path.join(os.tmpdir(), os.userInfo().username, sample.path);
+        const p = path.join(os.tmpdir(), os.userInfo().username, sample.path);
 
         try {
             await this.cli.createSample(sample.path, p);
@@ -117,85 +136,88 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             return;
         }
 
-        let a = path.join(p, "README.md");
+        const a = path.join(p, "README.md");
         vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(a));
     }
 
     public async askDownloadPermission(): Promise<boolean> {
-        let sel = await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it", "Yes", "No");
+        const sel = await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it", "Yes", "No");
         if (sel && sel === "Yes") {
             return true;
         }
         return false;
     }
 
-    private addSample(key: string[], pos: Map<string, SampleTreeItem>, ins: SampleContainer) {
+    /**
+     * Add sample to tree structure.
+     * @param key Key, is the potentential categories i.e [mycategory, mysubcategory]
+     * @param pos is the partent element in the tree i.e. the owneing category
+     * @param ins Sample to be inserted into tree.
+     */
+    private addSample(key: string[], pos: Map<string, SampleTreeItem>, ins: SampleContainer): void {
         if (key.length < 1) {
             //Add Sample
-            var add = new SampleTreeItem(ins.example.name, vscode.TreeItemCollapsibleState.None, ins.example.description, ins, undefined, undefined,
+            const add = new SampleTreeItem(ins.example.name, vscode.TreeItemCollapsibleState.None, ins.example.description, ins, undefined, undefined,
                 { command: "intel.oneAPISamples.show", title: "", arguments: [ins] });
             pos.set(ins.path, add);
             return;
         }
-        var cKey = key[0];
-        if (!pos.has(key[0])) {
-            var newMap = new Map<string, SampleTreeItem>();
-            var addCat = new SampleTreeItem(key[0], vscode.TreeItemCollapsibleState.Expanded, "", undefined, newMap, "cat");
-
-            pos.set(key[0], addCat);
-        }
-        key.shift();
+        const cKey = key.shift();
         if (cKey) {
-            if (pos.get(cKey)) {
-                var pos1: SampleTreeItem | any = pos.get(cKey);
-                if (pos1) {
-                    var pos2: Map<string, SampleTreeItem> | any = pos1.children;
-                    this.addSample(key, pos2, ins);
+            if (!pos.has(cKey)) {
+                const newMap = new Map<string, SampleTreeItem>();
+                const addCat = new SampleTreeItem(cKey, vscode.TreeItemCollapsibleState.Expanded, "", undefined, newMap, "cat");
+                pos.set(cKey, addCat);
+            }
+            const category: SampleTreeItem | undefined = pos.get(cKey);
+            if (category) {
+                const children: Map<string, SampleTreeItem> | undefined = category.children;
+                if (children) {
+                    this.addSample(key, children, ins);
                 }
-
             }
         }
     }
 
     private async getSortedChildren(node: SampleTreeItem): Promise<SampleTreeItem[]> {
         if (node.children) {
-            let r = Array.from(node.children.values());
+            const r = Array.from(node.children.values());
             return this.sort(r);
         }
-        return new Array();
+        return [];
     }
 
 
     private async getIndex(): Promise<SampleTreeItem[]> {
-        let clierror: boolean = false;
+        let clierror = false;
         await this.cli.ready.catch(() => {
             clierror = true;
 
         });
         if (clierror) {
             vscode.window.showErrorMessage("Unable to find oneapi-cli or download it");
-            let fail = new SampleTreeItem("Unable to find oneapi-cli or download it", vscode.TreeItemCollapsibleState.None, "", undefined, undefined, "blankO");
+            const fail = new SampleTreeItem("Unable to find oneapi-cli or download it", vscode.TreeItemCollapsibleState.None, "", undefined, undefined, "blankO");
             return [fail];
 
         }
 
+        const sampleArray: SampleContainer[] = await this.cli.fetchSamples(this.language);
+        const root = new Map<string, SampleTreeItem>();
 
-        let resp: SampleContainer[] = await this.cli.fetchSamples(this.language);
-        var Items: SampleTreeItem[] = new Array(resp.length);
-
-        var root = new Map<string, SampleTreeItem>();
-
-        for (let i of resp) {
-            for (let c of i.example.categories) {
-                var catPath = c.split('/');
-                if (catPath[0] = "Toolkit/") {
+        for (const sample of sampleArray) {
+            if (!sample.example.categories || sample.example.categories.length === 0) {
+                sample.example.categories = ["Other"];
+            }
+            for (const categories of sample.example.categories) {
+                const catPath = categories.split('/');
+                if (catPath[0] === "Toolkit") {
                     catPath.shift();
                 }
-                this.addSample(catPath, root, i);
+                this.addSample(catPath, root, sample);
             }
         }
-        let r = Array.from(root.values());
-        return this.sort(r);
+        const tree = Array.from(root.values());
+        return this.sort(tree);
     }
 
     private sort(nodes: SampleTreeItem[]): SampleTreeItem[] {
@@ -203,36 +225,5 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             return n1.label.localeCompare(n2.label);
         });
     }
-
-}
-
-
-export class SampleTreeItem extends vscode.TreeItem {
-
-
-    constructor(
-        public readonly label: string,
-
-        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public description: string,
-        public val?: SampleContainer,
-        public children?: Map<string, SampleTreeItem>,
-        public contextValue: string = "sample",
-        public readonly command?: vscode.Command,
-
-    ) {
-        super(label, collapsibleState);
-    }
-
-    get tooltip(): string {
-        return this.description;
-    }
-
-
-    // iconPath = {
-    //     light: path.join(__filename, '..', '..', 'resources', 'light', 'dependency.svg'),
-    //     dark: path.join(__filename, '..', '..', 'resources', 'dark', 'dependency.svg')
-    // };
-
 
 }

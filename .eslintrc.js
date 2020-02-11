@@ -11,6 +11,7 @@ module.exports = {
     "plugins": [
         "@typescript-eslint"
     ],
+    "extends": ["plugin:@typescript-eslint/recommended"],
     "rules": {
         "@typescript-eslint/class-name-casing": "warn",
         "@typescript-eslint/member-delimiter-style": [
