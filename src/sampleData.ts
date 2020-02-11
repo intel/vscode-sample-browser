@@ -6,7 +6,7 @@ import * as os from 'os';
 import { OneApiCli, SampleContainer } from './oneapicli';
 
 //Fairly basic regex for searching for URLs in a string.
-const r = /(https?:\/\/[^\s]+)/g;
+const urlMatch = /(https?:\/\/[^\s]+)/g;
 
 export class SampleTreeItem extends vscode.TreeItem {
 
@@ -88,7 +88,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         }
     }
     private linkify(text: string): string {
-        return text.replace(r, url => {
+        return text.replace(urlMatch, url => {
             return `[${url}](${url})`; //Vscode Markdown needs explict href and text
         });
     }
