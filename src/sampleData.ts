@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2020 Intel Corporation
+ * Licensed under the MIT License. See the project root LICENSE
+ * 
+ * SPDX-License-Identifier: MIT
+ */
+
 import * as vscode from 'vscode';
 
 import * as path from 'path';
