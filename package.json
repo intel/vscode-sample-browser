@@ -123,6 +123,7 @@
 		"@types/node": "^10.14.9",
 		"@types/node-fetch": "^2.5.4",
 		"@types/request-promise": "^4.1.45",
+		"@types/rimraf": "^2.0.3",
 		"@types/semver": "^7.1.0",
 		"@types/vscode": "1.42",
 		"@typescript-eslint/eslint-plugin": "^2.19.0",
@@ -135,6 +136,7 @@
 	},
 	"dependencies": {
 		"node-fetch": "^2.6.0",
+		"rimraf": "^3.0.2",
 		"semver": "^7.1.2"
 	},
 	"extensionDependencies": [

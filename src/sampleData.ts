@@ -9,6 +9,7 @@ import * as vscode from 'vscode';
 
 import * as path from 'path';
 import * as os from 'os';
+import * as rimraf from 'rimraf';
 
 import { OneApiCli, SampleContainer } from './oneapicli';
 
@@ -16,8 +17,6 @@ import { OneApiCli, SampleContainer } from './oneapicli';
 const urlMatch = /(https?:\/\/[^\s]+)/g;
 
 export class SampleTreeItem extends vscode.TreeItem {
-
-
     constructor(
         public readonly label: string,
 
@@ -44,6 +43,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     private cli = new OneApiCli(this.askDownloadPermission);
     private language = "";
+    private currentPreviewPath = "";
 
     constructor() {
         this.updateCLIConfig();
@@ -61,7 +61,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
         const cliPath: string | undefined = config.get('pathToCLI');
         if (cliPath) {
-            if(!this.cli.setCliPath(cliPath)) {
+            if (!this.cli.setCliPath(cliPath)) {
                 console.log("Intel oneAPI Sample Browser: CLI Path rejected");
             }
         }
@@ -135,18 +135,26 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         }
     }
     async show(sample: SampleContainer): Promise<void> {
-        const p = path.join(os.tmpdir(), os.userInfo().username, sample.path);
+        const tmpSamplePath = path.join(os.tmpdir(), os.userInfo().username, "inteloneapi", sample.path);
 
         try {
-            await this.cli.createSample(sample.path, p);
+            await this.cli.createSample(sample.path, tmpSamplePath);
         }
         catch (e) {
             vscode.window.showErrorMessage(e);
             return;
         }
 
-        const a = path.join(p, "README.md");
-        vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(a));
+        const readme = path.join(tmpSamplePath, "README.md");
+        await vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(readme));
+        if (this.currentPreviewPath !== "") {
+            rimraf(this.currentPreviewPath, error => {
+                if (error) {
+                    console.log(error);
+                }
+            });
+        }
+        this.currentPreviewPath = tmpSamplePath;
     }
 
     public async askDownloadPermission(): Promise<boolean> {
