@@ -62,11 +62,15 @@ export class OneApiCli {
 
     constructor(
         private downloadPermissionCb: () => Promise<boolean>,
-        public cli?: string,
+        private cli?: string,
         public baseURL?: string,
     ) {
         if ((!cli) || cli === "") {
             this.cli = cliBinName;
+        } else {
+            if (!this.setCliPath(cli)) {
+                throw(new Error("oneapi-cli passed is not valid"));
+            }
         }
         this.ready = new Promise(async (resolve, reject) => {
             //This first attempt will either use the explict path try to use
@@ -106,6 +110,23 @@ export class OneApiCli {
 
         });
         return;
+    }
+
+
+    /**
+     * Sets the oneapi-cli path, Will return false if path is not valid/executable
+     * @param cliPath Path to oneapi-cli
+     */
+    public async setCliPath(cliPath: string): Promise<boolean> {
+        try {
+            //X_OK on windows will just do a F_OK
+            await fs.promises.access(cliPath, fs.constants.X_OK);
+        }
+        catch (e) {
+            return false;
+        }
+        this.cli = cliPath;
+        return true;
     }
 
     public async fetchSamples(language: string): Promise<SampleContainer[]> {

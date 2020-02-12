@@ -54,8 +54,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
         const cliPath: string | undefined = config.get('pathToCLI');
         if (cliPath) {
-            {
-                this.cli.cli = cliPath;
+            if(!this.cli.setCliPath(cliPath)) {
+                console.log("Intel oneAPI Sample Browser: CLI Path rejected");
             }
         }
         const baseURL: string | undefined = config.get('baseURL');
