@@ -118,7 +118,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
         if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
             try {
-                this.cli.createSample(val.path, folder[0].fsPath);
+                await this.cli.createSample(val.path, folder[0].fsPath);
             }
             catch (e) {
                 vscode.window.showErrorMessage(`Sample Creation failed: ${e}`);

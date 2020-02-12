@@ -152,8 +152,8 @@ export class OneApiCli {
         }
     }
 
-    public createSample(sample: string, folder: string): void {
-        return exec(this.cli + " create " + sample + " " + folder);
+    public async createSample(sample: string, folder: string): Promise<void> {
+        return await exec(this.cli + " create " + sample + " " + folder);
     }
 
     //Return true if the version passed is greater than the min
