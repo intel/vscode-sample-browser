@@ -24,9 +24,5 @@ code .
 
 At this point you should be able to run the extension in the "Extension Development Host"
 
-
-![Screenshot of the extenison in action](screenshot.png)
-
 ## License
 This extension is released under MIT.
-Some resources such as icons may have other applicable liceses
