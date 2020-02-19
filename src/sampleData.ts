@@ -50,7 +50,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     }
 
     private async updateCLIConfig(): Promise<void> {
-        const config = vscode.workspace.getConfiguration("inteloneapi.samples");
+        const config = vscode.workspace.getConfiguration("intelOneAPI.samples");
         const languageValue: string | undefined = config.get('sampleLanguage');
 
         if (!languageValue || languageValue === "") {
@@ -104,7 +104,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const val = sample.val;
 
         //Dependency Check 
-        const skipCheck: boolean = vscode.workspace.getConfiguration("inteloneapi.samples").get('skipDependencyChecks') as boolean;
+        const skipCheck: boolean = vscode.workspace.getConfiguration("intelOneAPI.samples").get('skipDependencyChecks') as boolean;
         if (val?.example.dependencies && !skipCheck) {
             if (!process.env.ONEAPI_ROOT) {
                 vscode.window.

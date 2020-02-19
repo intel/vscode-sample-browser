@@ -3,7 +3,7 @@
 	"displayName": "Intel® oneAPI Sample Browser",
 	"description": "Intel® oneAPI code samples made easily downloadable",
 	"publisher": "intel-corporation",
-	"version": "0.0.23",
+	"version": "0.0.24",
 	"license": "MIT",
 	"icon": "media/icon.png",
 	"preview": true,
@@ -85,22 +85,22 @@
 		"configuration": {
 			"title": "Intel oneAPI Sample Browser",
 			"properties": {
-				"inteloneapi.samples.baseURL": {
+				"intelOneAPI.samples.baseURL": {
 					"type": "string",
 					"default": null,
 					"description": "Base URL for the samples"
 				},
-				"inteloneapi.samples.pathToCLI": {
+				"intelOneAPI.samples.pathToCLI": {
 					"type": "string",
 					"default": null,
-					"description": "Specifies an aboslute path for a 'oneapi-cli' to use for sample acquisition"
+					"description": "Specifies an absolute path of 'oneapi-cli' to use for sample acquisition"
 				},
-				"inteloneapi.samples.skipDependencyChecks": {
+				"intelOneAPI.samples.skipDependencyChecks": {
 					"type": "boolean",
 					"default": false,
 					"description": "Skips checking for install dependency a sample may require"
 				},
-				"inteloneapi.samples.sampleLanguage": {
+				"intelOneAPI.samples.sampleLanguage": {
 					"type": "string",
 					"default": "cpp",
 					"description": "Specifies the langauge for the sample tree to use"
