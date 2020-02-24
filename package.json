@@ -104,6 +104,11 @@
 					"type": "string",
 					"default": "cpp",
 					"description": "Specifies the langauge for the sample tree to use"
+				},
+				"intelOneAPI.samples.ignoreOsFilter": {
+					"type": "boolean",
+					"default": false,
+					"description": "By default, samples are only shown for the OS you are running, this options removes this filtering"
 				}
 			}
 		}

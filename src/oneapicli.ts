@@ -64,6 +64,7 @@ export class OneApiCli {
         private downloadPermissionCb: () => Promise<boolean>,
         private cli?: string,
         public baseURL?: string,
+        public ignoreOS?: boolean,
     ) {
         if ((!cli) || cli === "") {
             this.cli = cliBinName;
@@ -71,6 +72,9 @@ export class OneApiCli {
             if (!this.setCliPath(cli)) {
                 throw(new Error("oneapi-cli passed is not valid"));
             }
+        }
+        if (!ignoreOS) {
+            this.ignoreOS = false;
         }
         this.ready = new Promise(async (resolve, reject) => {
             //This first attempt will either use the explict path try to use
@@ -133,6 +137,9 @@ export class OneApiCli {
         let extraArg = "";
         if ((this.baseURL) && this.baseURL !== "") {
             extraArg = ` --url="${this.baseURL}"`;
+        }
+        if (this.ignoreOS) {
+            extraArg = `${extraArg} --ignore-os`;
         }
         const output = await exec(this.cli + ' list -j -o ' + language + extraArg, {});
         return JSON.parse(output.stdout);

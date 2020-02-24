@@ -69,6 +69,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         if (baseURL) {
             this.cli.baseURL = baseURL;
         }
+        const ignoreOSFilter: boolean | undefined = config.get("ignoreOsFilter");
+        if (ignoreOSFilter) {
+            this.cli.ignoreOS = true;
+        } else {
+            this.cli.ignoreOS = false;
+        }
     }
 
 
