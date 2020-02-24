@@ -3,7 +3,7 @@
 	"displayName": "Intel® oneAPI Sample Browser",
 	"description": "Intel® oneAPI code samples made easily downloadable",
 	"publisher": "intel-corporation",
-	"version": "0.0.24",
+	"version": "0.0.25",
 	"license": "MIT",
 	"icon": "media/icon.png",
 	"preview": true,
