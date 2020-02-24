@@ -158,7 +158,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     }
 
     public async askDownloadPermission(): Promise<boolean> {
-        const sel = await vscode.window.showInformationMessage("Required 'oneapi-cli' was not found on the Path, Do you want to download it", "Yes", "No");
+        const sel = await vscode.window.showQuickPick(["Yes", "No"], { ignoreFocusOut: true, canPickMany: false, placeHolder: "Required 'oneapi-cli' was not found on the Path, Do you want to download it" });
         return (sel === "Yes");
     }
 
