@@ -9,6 +9,7 @@ import * as vscode from 'vscode';
 
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 import * as rimraf from 'rimraf';
 
 import { OneApiCli, SampleContainer } from './oneapicli';
@@ -129,6 +130,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
         const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
         if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
+            if ((await fs.promises.readdir(folder[0].fsPath)).length) {
+                const overwrite = await vscode.window.showWarningMessage("The chosen folder is not empty. Creating the sample here *may* overwrite existing file!",{modal: true}, "Continue");
+                if (overwrite !== "Continue"){
+                    return;
+                }
+            }
             try {
                 await this.cli.createSample(val.path, folder[0].fsPath);
             }
