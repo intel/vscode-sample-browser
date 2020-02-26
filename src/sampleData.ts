@@ -77,7 +77,6 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         }
     }
 
-
     async refresh(): Promise<void> {
         await this.updateCLIConfig();
         this._onDidChangeTreeData.fire();
@@ -121,7 +120,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
                 if (output !== "") {
                     //Just show output from the CLI as other Browser currently do.
                     const r = await vscode.window.showWarningMessage(this.linkify(output), "Cancel", "Continue");
-                    if (r === "Cancel") {
+                    if (r !== "Continue") {
                         return;
                     }
                 }
