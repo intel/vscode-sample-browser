@@ -216,6 +216,10 @@ export class OneApiCli {
         const installdir = path.join(os.homedir(), ".oneapi-cli");
         const cliPath = path.join(installdir, OsBin);
 
+        const exists = await fs.promises.access(installdir).then(() => true).catch(() => false);
+        if (!exists) {
+            await fs.promises.mkdir(installdir);
+        }
         const downloadAndWrite = new Promise(async (resolve, reject) => {
             try {
                 const response = await fetch(url);
