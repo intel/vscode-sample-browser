@@ -141,17 +141,20 @@ export class OneApiCli {
         if (this.ignoreOS) {
             extraArg = `${extraArg} --ignore-os`;
         }
-        const output = await exec(this.cli + ' list -j -o ' + language + extraArg, {});
+        const cmd = '"' + this.cli + '"' + ' list -j -o ' + language + extraArg;
+        const output = await exec(cmd, {});
         return JSON.parse(output.stdout);
     }
 
     public async cleanCache(): Promise<void> {
-        await exec(this.cli + ' clean', {});
+        const cmd = '"' + this.cli + '"' + ' clean';
+        await exec(cmd, {});
     }
 
     public async checkDependencies(deps: string): Promise<string> {
         try {
-            const p2 = await exec(this.cli + ' check --deps="' + deps + '"', {});
+            const cmd = '"' + this.cli + '"' + ' check --deps="' + deps + '"';
+            const p2 = await exec(cmd, {});
             return p2.stdout as string;
 
         } catch (e) {
@@ -160,7 +163,8 @@ export class OneApiCli {
     }
 
     public async createSample(sample: string, folder: string): Promise<void> {
-        return await exec(`${this.cli} create "${sample}" "${folder}"`);
+        const cmd = `"${this.cli}" create "${sample}" "${folder}"`;
+        return await exec(cmd);
     }
 
     //Return true if the version passed is greater than the min
@@ -172,7 +176,8 @@ export class OneApiCli {
 
     private async getCliVersion(exe: string): Promise<string> {
         try {
-            const a = await exec(exe + " version", {});
+            const cmd = '"' + exe + '"' + " version";
+            const a = await exec(cmd, {});
             if (a.stdout) {
                 return semver.clean(a.stdout.toString(), { includePrerelease: true }) as string;
             }
