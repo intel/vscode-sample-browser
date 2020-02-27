@@ -48,6 +48,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     constructor() {
         this.cli = this.makeCLIFromConfig();
+        vscode.workspace.onDidChangeConfiguration(event => {
+            const affected = event.affectsConfiguration("intelOneAPI.samples");
+            if (affected) {
+                this.updateCLIConfig();
+            }
+        });
     }
 
     private makeCLIFromConfig(): OneApiCli {
@@ -94,9 +100,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     }
 
     async refresh(): Promise<void> {
-        await this.updateCLIConfig();
         this._onDidChangeTreeData.fire();
-
     }
     async clean(): Promise<void> {
         await this.cli.cleanCache();
@@ -146,8 +150,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
         if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
             if ((await fs.promises.readdir(folder[0].fsPath)).length) {
-                const overwrite = await vscode.window.showWarningMessage("The chosen folder is not empty. Creating the sample here *may* overwrite existing file!",{modal: true}, "Continue");
-                if (overwrite !== "Continue"){
+                const overwrite = await vscode.window.showWarningMessage("The chosen folder is not empty. Creating the sample here *may* overwrite existing file!", { modal: true }, "Continue");
+                if (overwrite !== "Continue") {
                     return;
                 }
             }
