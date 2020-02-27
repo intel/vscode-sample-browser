@@ -70,7 +70,7 @@ export class OneApiCli {
             this.cli = cliBinName;
         } else {
             if (!this.setCliPath(cli)) {
-                throw(new Error("oneapi-cli passed is not valid"));
+                throw (new Error("oneapi-cli passed is not valid"));
             }
         }
         if (!ignoreOS) {
@@ -221,10 +221,14 @@ export class OneApiCli {
         const installdir = path.join(os.homedir(), ".oneapi-cli");
         const cliPath = path.join(installdir, OsBin);
 
-        const exists = await fs.promises.access(installdir).then(() => true).catch(() => false);
-        if (!exists) {
+        try {
             await fs.promises.mkdir(installdir);
+        } catch (err) {
+            if (err.code !== 'EEXIST') {
+                console.log(err);
+            }
         }
+
         const downloadAndWrite = new Promise(async (resolve, reject) => {
             try {
                 const response = await fetch(url);
