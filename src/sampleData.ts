@@ -42,12 +42,27 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<SampleTreeItem | undefined> = new vscode.EventEmitter<SampleTreeItem | undefined>();
     readonly onDidChangeTreeData: vscode.Event<SampleTreeItem | undefined> = this._onDidChangeTreeData.event;
 
-    private cli = new OneApiCli(this.askDownloadPermission);
+    private cli: OneApiCli;
     private language = "";
     private currentPreviewPath = "";
 
     constructor() {
-        this.updateCLIConfig();
+        this.cli = this.makeCLIFromConfig();
+    }
+
+    private makeCLIFromConfig(): OneApiCli {
+        const config = vscode.workspace.getConfiguration("intelOneAPI.samples");
+        const languageValue: string | undefined = config.get('sampleLanguage');
+
+        if (!languageValue || languageValue === "") {
+            vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate");
+        }
+        this.language = languageValue as string;
+
+        const cliPath: string | undefined = config.get('pathToCLI');
+        const baseURL: string | undefined = config.get('baseURL');
+        const ignoreOSFilter: boolean | undefined = config.get("ignoreOsFilter");
+        return new OneApiCli(this.askDownloadPermission, cliPath, baseURL, ignoreOSFilter);
     }
 
     private async updateCLIConfig(): Promise<void> {

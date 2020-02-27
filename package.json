@@ -103,7 +103,7 @@
 				"intelOneAPI.samples.sampleLanguage": {
 					"type": "string",
 					"default": "cpp",
-					"description": "Specifies the langauge for the sample tree to use"
+					"description": "Specifies the language for the sample tree to use"
 				},
 				"intelOneAPI.samples.ignoreOsFilter": {
 					"type": "boolean",
