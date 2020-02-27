@@ -234,16 +234,11 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
 
     private async getIndex(): Promise<SampleTreeItem[]> {
-        let clierror = false;
-        await this.cli.ready.catch(() => {
-            clierror = true;
-
-        });
-        if (clierror) {
+        const success = await this.cli.ready.catch(() => false);
+        if (!success) {
             vscode.window.showErrorMessage("Unable to find oneapi-cli or download it");
             const fail = new SampleTreeItem("Unable to find oneapi-cli or download it", vscode.TreeItemCollapsibleState.None, "", undefined, undefined, "blankO");
             return [fail];
-
         }
 
         const sampleArray: SampleContainer[] = await this.cli.fetchSamples(this.language);

@@ -56,9 +56,12 @@ const cliBinName = "oneapi-cli";
 //Minimum support version of the CLI that supports this interface
 const requiredCliVersion = "0.0.13";
 
+//Base path where the CLI can be downloaded from
+const baseBinPath = "https://github.com/intel/oneapi-cli/releases/latest/download";
+
 export class OneApiCli {
 
-    public ready: Promise<void>;
+    public ready: Promise<boolean>;
 
     constructor(
         private downloadPermissionCb: () => Promise<boolean>,
@@ -76,12 +79,12 @@ export class OneApiCli {
         if (!ignoreOS) {
             this.ignoreOS = false;
         }
-        this.ready = new Promise(async (resolve, reject) => {
+        this.ready = new Promise<boolean>(async (resolve) => {
             //This first attempt will either use the explict path try to use
             //a cli from the PATH
             let version = await this.getCliVersion(this.cli as string).catch();
             if (version && this.compareVersion(version)) {
-                resolve();
+                resolve(true);
                 return;
             }
             const cliHomePath = path.join(os.homedir(), ".oneapi-cli", cliBinName);
@@ -89,7 +92,7 @@ export class OneApiCli {
             version = await this.getCliVersion(cliHomePath);
             if (version && this.compareVersion(version)) {
                 this.cli = cliHomePath;
-                resolve();
+                resolve(true);
                 return;
             }
 
@@ -97,20 +100,20 @@ export class OneApiCli {
             if (await this.downloadPermissionCb()) {
                 const path = await this.downloadCli();
                 if (path === "") {
-                    reject();
+                    resolve(false);
                     return;
                 }
                 version = await this.getCliVersion(path);
                 if (version && this.compareVersion(version)) {
                     this.cli = path;
-                    resolve();
+                    resolve(true);
                     return;
                 }
                 //Somehow if we get here, the Downloaded CLI version is not compatible.
 
             }
 
-            reject();
+            resolve(false);
 
         });
         return;
@@ -189,22 +192,17 @@ export class OneApiCli {
     }
 
     private async downloadCli(): Promise<string> {
-
-        let CiOs = ""; //OS String as in CI
+        let builtOS = ""; //OS String as in CI
         let binSuffix = "";
 
         switch (os.platform()) {
-            case "linux": {
-                CiOs = "linux";
+            case "darwin":
+            case "linux":
+                builtOS = os.platform();
                 break;
-            }
             case "win32": {
-                CiOs = "win";
+                builtOS = "windows";
                 binSuffix = ".exe";
-                break;
-            }
-            case "darwin": {
-                CiOs = "osx";
                 break;
             }
             default: {
@@ -212,11 +210,11 @@ export class OneApiCli {
             }
         }
 
+        const assetPath = `${cliBinName}-${builtOS}${binSuffix}`;
+
+        const url = `${baseBinPath}/${assetPath}`;
+      
         const OsBin: string = cliBinName + binSuffix;
-
-        const url =
-            `https://gitlab.devtools.intel.com/api/v4/projects/32487/jobs/artifacts/r2021.1-beta05/raw/${CiOs}/bin/${OsBin}?job=sign`;
-
 
         const installdir = path.join(os.homedir(), ".oneapi-cli");
         const cliPath = path.join(installdir, OsBin);
