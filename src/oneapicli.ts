@@ -8,6 +8,8 @@
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as crypto from 'crypto';
+
 
 import util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -213,7 +215,7 @@ export class OneApiCli {
         const assetPath = `${cliBinName}-${builtOS}${binSuffix}`;
 
         const url = `${baseBinPath}/${assetPath}`;
-      
+
         const OsBin: string = cliBinName + binSuffix;
 
         const installdir = path.join(os.homedir(), ".oneapi-cli");
@@ -227,20 +229,31 @@ export class OneApiCli {
             }
         }
 
-        const downloadAndWrite = new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(url);
-                const cliBody = fs.createWriteStream(cliPath, { mode: 0o755 });
-                cliBody.on('finish', resolve);
-                cliBody.on("error", reject);
-                response.body.pipe(cliBody);
-            }
-            catch (e) {
-                reject();
-            }
-        });
+        try {
 
-        await downloadAndWrite;
+            const response = await fetch(url);
+            const sumReponse = await fetch(url + ".sha256");
+            const hasher = crypto.createHash("sha256", { encoding: "utf8" });
+               
+            const bin = await response.buffer();
+            hasher.update(bin);
+
+            const srcSum = (await sumReponse.buffer()).toString().split("\n")[0];
+            const dlSum = hasher.digest("hex").toString();
+
+
+            if (srcSum !== dlSum) {
+
+                console.log("Intel oneAPI sample: The downloaded cli did not match the expect downloaded sha256 sum");
+                return "";
+            }
+
+            await fs.promises.writeFile(cliPath, bin, {mode: 0o755});
+        }
+        catch (e) {
+            return "";
+        }
+
         return cliPath;
     }
 }
