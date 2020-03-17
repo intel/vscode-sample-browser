@@ -1,16 +1,16 @@
-# Intel<sup>®</sup> oneAPI Sample Browser for Visual Studio Code
+# Sample Browser for Intel<sup>®</sup> oneAPI Toolkits
 
-A simple extension for viewing code samples availible for Intel oneAPI.
+A simple extension for viewing code samples availible for Intel oneAPI toolkits.
 Leverages cross platform `oneapi-cli` to get the sample index and contents.
 
 ![Gif of the extenison in action](demo.gif)
 
 ## Functionality
 
-* View availible samples in Intel oneAPI, and lets you download them.
+* View availible samples from Intel oneAPI toolkits, and lets you download them.
 * Check dependecies are installed for a sample.
 
-## Where to find Intel oneAPI tools.
+## Where to find Intel oneAPI toolkits.
 
 This extension does not provide any of the tools that may be required to compile/run the sample.
 

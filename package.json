@@ -1,9 +1,9 @@
 {
 	"name": "oneapi-samples",
-	"displayName": "Intel® oneAPI Sample Browser",
-	"description": "Intel® oneAPI code samples made easily downloadable",
+	"displayName": "Sample Browser for Intel® oneAPI Toolkits",
+	"description": "Browse samples for Intel® oneAPI Toolkits",
 	"publisher": "intel-corporation",
-	"version": "0.0.27",
+	"version": "0.0.28",
 	"license": "MIT",
 	"icon": "media/icon.png",
 	"preview": true,
