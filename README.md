@@ -1,4 +1,4 @@
-# Sample Browser for Intel<sup>®</sup> oneAPI Toolkits
+# Sample Browser for Intel oneAPI Toolkits
 
 A simple extension for viewing code samples available for Intel oneAPI toolkits.
 Leverages cross platform `oneapi-cli` to get the sample index and contents.
