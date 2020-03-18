@@ -1,14 +1,14 @@
 # Sample Browser for Intel<sup>®</sup> oneAPI Toolkits
 
-A simple extension for viewing code samples availible for Intel oneAPI toolkits.
+A simple extension for viewing code samples available for Intel oneAPI toolkits.
 Leverages cross platform `oneapi-cli` to get the sample index and contents.
 
-![Gif of the extenison in action](demo.gif)
+![Gif of the extension in action](demo.gif)
 
 ## Functionality
 
-* View availible samples from Intel oneAPI toolkits, and lets you download them.
-* Check dependecies are installed for a sample.
+* View available samples from Intel oneAPI toolkits, and lets you download them.
+* Check dependencies are installed for a sample.
 
 ## Where to find Intel oneAPI toolkits.
 
@@ -17,7 +17,7 @@ This extension does not provide any of the tools that may be required to compile
 Please visit https://software.intel.com/en-us/oneapi for details.
 
 
-## Contrbuting 
+## Contributing 
 Install Visual Studio Code (at least version 1.42) and open this project within it.
 You may also need `yarn` installed, and of course `node + npm`
 
