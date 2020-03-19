@@ -149,6 +149,6 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://gitlab.devtools.intel.com/sip-oneapi/vscode-oneapi-sample.git"
+		"url": "https://github.com/intel/vscode-sample-browser.git"
 	}
 }
