@@ -7,13 +7,13 @@
 
 import * as vscode from 'vscode';
 import { SampleProvider, SampleTreeItem } from './sampleData';
-import {SampleContainer} from './oneapicli';
 
 export function activate(context: vscode.ExtensionContext): void{
 		const sampleData = new SampleProvider();
 		context.subscriptions.push(vscode.window.createTreeView("intel.oneAPISamples.tree", {treeDataProvider: sampleData, showCollapseAll: true}));
 		context.subscriptions.push(vscode.commands.registerCommand('intel.oneAPISamples.create', (sample: SampleTreeItem) => sampleData.create(sample)));
-		context.subscriptions.push(vscode.commands.registerCommand('intel.oneAPISamples.show', (sample: SampleContainer) => sampleData.show(sample)));
+	    context.subscriptions.push(vscode.commands.registerCommand('intel.oneAPISamples.readme', (sample: SampleTreeItem) => sampleData.readme(sample)));
+
 		context.subscriptions.push(vscode.commands.registerCommand('intel.oneAPISamples.clean', () => sampleData.clean()));
 		context.subscriptions.push(vscode.commands.registerCommand('intel.oneAPISamples.refresh', () => sampleData.refresh()));
 }

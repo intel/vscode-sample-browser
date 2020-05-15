@@ -37,6 +37,11 @@
 				"command": "intel.oneAPISamples.create",
 				"title": "Create",
 				"icon": "$(add)"
+			},
+			{
+				"command": "intel.oneAPISamples.readme",
+				"title": "Open Readme",
+				"icon": "$(globe)"
 			}
 		],
 		"viewsContainers": {
@@ -64,6 +69,15 @@
 				},
 				{
 					"command": "intel.oneAPISamples.create",
+					"when": "view == intel.oneAPISamples.tree && viewItem == sample",
+					"group": "inline"
+				},
+				{
+					"command": "intel.oneAPISamples.readme",
+					"when": "view == intel.oneAPISamples.tree && viewItem == sample"
+				},
+				{
+					"command": "intel.oneAPISamples.readme",
 					"when": "view == intel.oneAPISamples.tree && viewItem == sample",
 					"group": "inline"
 				}
@@ -144,9 +158,6 @@
 		"rimraf": "^3.0.2",
 		"semver": "^7.1.2"
 	},
-	"extensionDependencies": [
-		"vscode.markdown-language-features"
-	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/intel/vscode-sample-browser.git"

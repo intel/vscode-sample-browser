@@ -6,11 +6,7 @@
  */
 
 import * as vscode from 'vscode';
-
-import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
-import * as rimraf from 'rimraf';
 
 import { OneApiCli, SampleContainer } from './oneapicli';
 
@@ -165,27 +161,11 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             vscode.commands.executeCommand("vscode.openFolder", folder[0], true);
         }
     }
-    async show(sample: SampleContainer): Promise<void> {
-        const tmpSamplePath = path.join(os.tmpdir(), os.userInfo().username, "inteloneapi", sample.path);
-
-        try {
-            await this.cli.createSample(sample.path, tmpSamplePath);
+    async readme(sample: SampleTreeItem): Promise<void> {
+        const val = sample.val;
+        if (val) {
+            vscode.env.openExternal(vscode.Uri.parse(val.example.sample_readme_uri));
         }
-        catch (e) {
-            vscode.window.showErrorMessage(e);
-            return;
-        }
-
-        const readme = path.join(tmpSamplePath, "README.md");
-        await vscode.commands.executeCommand("markdown.showPreview", vscode.Uri.file(readme));
-        if (this.currentPreviewPath !== "") {
-            rimraf(this.currentPreviewPath, error => {
-                if (error) {
-                    console.log(error);
-                }
-            });
-        }
-        this.currentPreviewPath = tmpSamplePath;
     }
 
     public async askDownloadPermission(): Promise<boolean> {
