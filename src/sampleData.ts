@@ -152,7 +152,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
                 }
             }
             try {
-                await this.cli.createSample(val.path, folder[0].fsPath);
+                await this.cli.createSample(val.language, val.path, folder[0].fsPath);
             }
             catch (e) {
                 vscode.window.showErrorMessage(`Sample Creation failed: ${e}`);

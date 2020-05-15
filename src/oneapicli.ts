@@ -56,7 +56,7 @@ OneAPI-Interface in Typescript
 const cliBinName = "oneapi-cli";
 
 //Minimum support version of the CLI that supports this interface
-const requiredCliVersion = "0.0.13";
+const requiredCliVersion = "0.0.15";
 
 //Base path where the CLI can be downloaded from
 const baseBinPath = "https://github.com/intel/oneapi-cli/releases/latest/download";
@@ -148,7 +148,13 @@ export class OneApiCli {
         }
         const cmd = '"' + this.cli + '"' + ' list -j -o ' + language + extraArg;
         const output = await exec(cmd, {});
-        return JSON.parse(output.stdout);
+
+        //add language reference to sample
+        const recv = JSON.parse(output.stdout);
+        for (const sample of recv) {
+            sample.language = language;
+        }
+        return recv;
     }
 
     public async cleanCache(): Promise<void> {
@@ -167,8 +173,8 @@ export class OneApiCli {
         }
     }
 
-    public async createSample(sample: string, folder: string): Promise<void> {
-        const cmd = `"${this.cli}" create "${sample}" "${folder}"`;
+    public async createSample(language: string, sample: string, folder: string): Promise<void> {
+        const cmd = `"${this.cli}" create -s "${language}" "${sample}" "${folder}"`;
         return await exec(cmd);
     }
 
@@ -261,6 +267,7 @@ export class OneApiCli {
 export interface SampleContainer {
     path: string;
     example: Sample;
+    language: string;
 }
 
 export interface Sample {

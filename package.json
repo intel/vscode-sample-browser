@@ -3,7 +3,7 @@
 	"displayName": "Sample Browser for Intel oneAPI Toolkits",
 	"description": "Browse samples for Intel oneAPI Toolkits",
 	"publisher": "intel-corporation",
-	"version": "0.0.30",
+	"version": "0.0.31",
 	"license": "MIT",
 	"icon": "media/icon.png",
 	"preview": true,
