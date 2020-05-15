@@ -39,7 +39,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     readonly onDidChangeTreeData: vscode.Event<SampleTreeItem | undefined> = this._onDidChangeTreeData.event;
 
     private cli: OneApiCli;
-    private language = "";
+    private languages: string[] = [];
     private currentPreviewPath = "";
 
     constructor() {
@@ -54,12 +54,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     private makeCLIFromConfig(): OneApiCli {
         const config = vscode.workspace.getConfiguration("intelOneAPI.samples");
-        const languageValue: string | undefined = config.get('sampleLanguage');
+        const languageValue: string[] | undefined = config.get('sampleLanguages');
 
-        if (!languageValue || languageValue === "") {
+        if (!languageValue || languageValue.length === 0) {
             vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate");
         }
-        this.language = languageValue as string;
+        this.languages = languageValue as string[];
 
         const cliPath: string | undefined = config.get('pathToCLI');
         const baseURL: string | undefined = config.get('baseURL');
@@ -69,12 +69,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     private async updateCLIConfig(): Promise<void> {
         const config = vscode.workspace.getConfiguration("intelOneAPI.samples");
-        const languageValue: string | undefined = config.get('sampleLanguage');
+        const languageValue: string[] | undefined = config.get('sampleLanguage');
 
-        if (!languageValue || languageValue === "") {
+        if (!languageValue || languageValue.length === 0) {
             vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate");
         }
-        this.language = languageValue as string;
+        this.languages = languageValue as string[];
 
 
         const cliPath: string | undefined = config.get('pathToCLI');
@@ -191,7 +191,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         if (cKey) {
             if (!pos.has(cKey)) {
                 const newMap = new Map<string, SampleTreeItem>();
-                const addCat = new SampleTreeItem(cKey, vscode.TreeItemCollapsibleState.Expanded, "", undefined, newMap, "cat");
+                const addCat = new SampleTreeItem(cKey, vscode.TreeItemCollapsibleState.Collapsed, "", undefined, newMap, "cat");
                 pos.set(cKey, addCat);
             }
             const category: SampleTreeItem | undefined = pos.get(cKey);
@@ -220,22 +220,30 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             const fail = new SampleTreeItem("Unable to find oneapi-cli or download it", vscode.TreeItemCollapsibleState.None, "", undefined, undefined, "blankO");
             return [fail];
         }
-
-        const sampleArray: SampleContainer[] = await this.cli.fetchSamples(this.language);
         const root = new Map<string, SampleTreeItem>();
 
-        for (const sample of sampleArray) {
-            if (!sample.example.categories || sample.example.categories.length === 0) {
-                sample.example.categories = ["Other"];
-            }
-            for (const categories of sample.example.categories) {
-                const catPath = categories.split('/');
-                if (catPath[0] === "Toolkit") {
-                    catPath.shift();
+        for (const l of this.languages) {
+            const newMap = new Map<string, SampleTreeItem>();
+            const languageRoot = new SampleTreeItem(l, vscode.TreeItemCollapsibleState.Expanded, "", undefined, newMap, "cat");
+            root.set(l, languageRoot);
+
+            const sampleArray: SampleContainer[] = await this.cli.fetchSamples(l);
+
+            for (const sample of sampleArray) {
+                if (!sample.example.categories || sample.example.categories.length === 0) {
+                    sample.example.categories = ["Other"];
                 }
-                this.addSample(catPath, root, sample);
+                for (const categories of sample.example.categories) {
+                    const catPath = categories.split('/');
+                    if (catPath[0] === "Toolkit") {
+                        catPath.shift();
+                    }
+                    this.addSample(catPath, newMap, sample);
+                }
             }
+
         }
+
         const tree = Array.from(root.values());
         return this.sort(tree);
     }
