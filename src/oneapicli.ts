@@ -149,8 +149,13 @@ export class OneApiCli {
         const cmd = '"' + this.cli + '"' + ' list -j -o ' + language + extraArg;
         const output = await exec(cmd, {});
 
+        let recv: SampleContainer[] = [];
+        try {
+            recv = JSON.parse(output.stdout);
+        } catch (e) {
+            return recv;
+        }
         //add language reference to sample
-        const recv = JSON.parse(output.stdout);
         for (const sample of recv) {
             sample.language = language;
         }
@@ -240,7 +245,7 @@ export class OneApiCli {
             const response = await fetch(url);
             const sumReponse = await fetch(url + ".sha256");
             const hasher = crypto.createHash("sha256", { encoding: "utf8" });
-               
+
             const bin = await response.buffer();
             hasher.update(bin);
 
@@ -254,7 +259,7 @@ export class OneApiCli {
                 return "";
             }
 
-            await fs.promises.writeFile(cliPath, bin, {mode: 0o755});
+            await fs.promises.writeFile(cliPath, bin, { mode: 0o755 });
         }
         catch (e) {
             return "";

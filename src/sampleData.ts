@@ -223,12 +223,22 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const root = new Map<string, SampleTreeItem>();
 
         for (const l of this.languages) {
+            let sampleArray: SampleContainer[] = [];
+            try {
+                sampleArray = await this.cli.fetchSamples(l);
+            }
+            catch (e) {
+                vscode.window.showErrorMessage(`Failed to fetch langauge ${l} from the CLI: ${e}`);
+                continue; // Skip adding the node of this langauge
+            }
+
+            if (sampleArray.length === 0) {
+                continue; //Skip adding the node of this langauge, the reponse was empty
+            }
+
             const newMap = new Map<string, SampleTreeItem>();
             const languageRoot = new SampleTreeItem(l, vscode.TreeItemCollapsibleState.Expanded, "", undefined, newMap, "cat");
             root.set(l, languageRoot);
-
-            const sampleArray: SampleContainer[] = await this.cli.fetchSamples(l);
-
             for (const sample of sampleArray) {
                 if (!sample.example.categories || sample.example.categories.length === 0) {
                     sample.example.categories = ["Other"];
