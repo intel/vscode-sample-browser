@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.32
+
+- Fix issue when a response from the CLI is empty, this was treated as an error. This mean on Mac OS, the whole tree would fail beacuse at the time of reporting, there was no Python samples on Mac OS
+
 ##  0.0.31
 
 - Remove action when selecting a sample where it would then display the README.
