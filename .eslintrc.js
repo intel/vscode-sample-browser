@@ -39,5 +39,13 @@ module.exports = {
         "no-redeclare": "warn",
         "no-throw-literal": "warn",
         "no-unused-expressions": "warn"
-    }
+    },
+    "overrides": [
+        {
+            "files": ["src/test/**/*"],
+            "rules": {
+                "no-unused-expressions": "off"
+            }
+        }
+    ]
 };
