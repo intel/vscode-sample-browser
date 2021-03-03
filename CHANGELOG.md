@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.34
+
+- Update oneAPI logos
+
 ## 0.0.33
 
 - First non-preview release
