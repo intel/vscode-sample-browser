@@ -6,7 +6,13 @@
 	"version": "0.0.34",
 	"license": "MIT",
 	"icon": "media/oneapi-logo.png",
-	"keywords": ["intel", "oneapi", "sycl", "dpc++", "iot"],
+	"keywords": [
+		"intel",
+		"oneapi",
+		"sycl",
+		"dpc++",
+		"iot"
+	],
 	"engines": {
 		"vscode": "^1.42.0"
 	},
