@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.35
+
+- Add link to documentation and video.
+- Bump devel-dependencies.
+
 ## 0.0.34
 
 - Update oneAPI logos
