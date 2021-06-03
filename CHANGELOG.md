@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.36
+
+- Increase minimum required `oneapi-cli` version
+- Bump devel-dependencies.
+
 ## 0.0.35
 
 - Add link to documentation and video.
