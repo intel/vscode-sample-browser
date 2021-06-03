@@ -21,8 +21,7 @@ describe("Sample browser basic tests", () => {
 
     it("Sample plugin should be available", async () => {
         const sampleBrowser = await activityBar
-            .getViewControl("Intel oneAPI")
-            .wait();
+            .getViewControl("Intel oneAPI");
         expect(sampleBrowser).not.undefined;
     });
 
@@ -31,9 +30,12 @@ describe("Sample browser basic tests", () => {
 
         const view = await activityBar
             .getViewControl("Intel oneAPI")
-            .openView();
+        if (!view) {
+            return
+        }
+        const sidebar = await view.openView()
 
-        const content = await view.getContent().wait();
+        const content = await sidebar.getContent().wait();
         const sections = await content.getSections();
         const section = sections[0]; // Get top section
 
@@ -43,9 +45,11 @@ describe("Sample browser basic tests", () => {
         }, 40000);
 
         await section.expand();
+        // const itemGetCPP = await section.findItem('cpp');
+        // await itemGetCPP?.select();
         const itemGetStart = await section.findItem('Get Started');
         await itemGetStart?.select();
-        const itemVectorAdd = await section.findItem('Vector Add');
+        const itemVectorAdd = await section.findItem('Base: Vector Add');
         await itemVectorAdd?.select();
 
         const menu = await itemVectorAdd?.openContextMenu();
