@@ -56,7 +56,7 @@ OneAPI-Interface in Typescript
 const cliBinName = "oneapi-cli";
 
 //Minimum support version of the CLI that supports this interface
-const requiredCliVersion = "0.0.15";
+const requiredCliVersion = "0.1.1";
 
 //Base path where the CLI can be downloaded from
 const baseBinPath = "https://github.com/intel/oneapi-cli/releases/latest/download";
