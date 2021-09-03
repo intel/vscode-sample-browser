@@ -18,7 +18,7 @@ export class SampleTreeItem extends vscode.TreeItem {
         public readonly label: string,
 
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public description: string,
+        public tooltip: string,
         public val?: SampleContainer,
         public children?: Map<string, SampleTreeItem>,
         public contextValue: string = "sample",
@@ -28,9 +28,6 @@ export class SampleTreeItem extends vscode.TreeItem {
         super(label, collapsibleState);
     }
 
-    get tooltip(): string {
-        return this.description;
-    }
 }
 
 export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {

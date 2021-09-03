@@ -1,5 +1,4 @@
-import { ActivityBar, VSBrowser} from "vscode-extension-tester";
-import { DialogHandler } from "vscode-extension-tester-native";
+import { ActivityBar, VSBrowser, InputBox} from "vscode-extension-tester";
 import { expect } from "chai";
 import { rmdirSync, mkdir, readdirSync } from "fs";
 import * as path from "path";
@@ -29,11 +28,11 @@ describe("Sample browser basic tests", () => {
         this.timeout(62000);
 
         const view = await activityBar
-            .getViewControl("Intel oneAPI")
+            .getViewControl("Intel oneAPI");
         if (!view) {
-            return
+            return;
         }
-        const sidebar = await view.openView()
+        const sidebar = await view.openView();
 
         const content = await sidebar.getContent().wait();
         const sections = await content.getSections();
@@ -55,9 +54,9 @@ describe("Sample browser basic tests", () => {
         const menu = await itemVectorAdd?.openContextMenu();
 
         await menu?.select('Create');
-        const dialog = await DialogHandler.getOpenDialog();
-        await dialog.selectPath(samplePath);
-        await dialog.confirm();
+        const input = await InputBox.create();
+        await input.setText(samplePath);
+        await input.confirm();
 
         await browser.driver.sleep(1000);
         expect(readdirSync(samplePath).length).to.not.equal(0);

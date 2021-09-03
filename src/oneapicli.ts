@@ -173,8 +173,8 @@ export class OneApiCli {
             const p2 = await exec(cmd, {});
             return p2.stdout as string;
 
-        } catch (e) {
-            return e.stdout;
+        } catch (e: any) {
+                return e.stdout;
         }
     }
 
@@ -234,7 +234,7 @@ export class OneApiCli {
 
         try {
             await fs.promises.mkdir(installdir);
-        } catch (err) {
+        } catch (err: any) {
             if (err.code !== 'EEXIST') {
                 console.log(err);
             }
