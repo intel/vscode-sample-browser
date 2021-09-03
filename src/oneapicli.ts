@@ -243,8 +243,8 @@ export class OneApiCli {
         try {
 
             const response = await fetch(url);
-            const sumReponse = await fetch(url + ".sha256");
-            const hasher = crypto.createHash("sha256", { encoding: "utf8" });
+            const sumReponse = await fetch(url + ".sha384");
+            const hasher = crypto.createHash("sha384", { encoding: "utf8" });
 
             const bin = await response.buffer();
             hasher.update(bin);
@@ -255,7 +255,7 @@ export class OneApiCli {
 
             if (srcSum !== dlSum) {
 
-                console.log("Intel oneAPI sample: The downloaded cli did not match the expect downloaded sha256 sum");
+                console.log("Intel oneAPI sample: The downloaded cli did not match the expect downloaded sha384 sum");
                 return "";
             }
 
