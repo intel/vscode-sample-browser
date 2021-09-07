@@ -1,9 +1,9 @@
 {
 	"name": "oneapi-samples",
-	"displayName": "Sample Browser for Intel oneAPI Toolkits",
+	"displayName": "Code Sample Browser for Intel® oneAPI Toolkits",
 	"description": "Browse samples for Intel oneAPI Toolkits",
 	"publisher": "intel-corporation",
-	"version": "0.0.38",
+	"version": "0.0.37",
 	"license": "MIT",
 	"icon": "media/oneapi-logo.png",
 	"keywords": [

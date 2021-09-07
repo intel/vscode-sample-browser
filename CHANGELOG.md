@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.37
+
+- `oneapi-cli` download action verfies with SHA384
+- Bump devel-dependencies.
+
 ## 0.0.36
 
 - Increase minimum required `oneapi-cli` version
