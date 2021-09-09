@@ -1,4 +1,4 @@
-# Sample Browser for Intel oneAPI Toolkits
+# Code Sample Browser for Intel® oneAPI Toolkits
 
 The Sample Browser extension helps you discover and create oneAPI projects
 that illustrate how to implement algorithms and applications with the oneAPI
