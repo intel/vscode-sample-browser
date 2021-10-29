@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.38
+
+- Add support for fortran
+- Add sample browsing via QuickPick command pallete UI
+- Bump lowest version of VS Code to support.
+
 ## 0.0.37
 
 - `oneapi-cli` download action verfies with SHA384
