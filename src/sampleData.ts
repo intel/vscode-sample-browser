@@ -9,6 +9,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 
 import { OneApiCli, SampleContainer } from './oneapicli';
+import {SampleQuickItem} from "./quickpick";
 
 //Fairly basic regex for searching for URLs in a string.
 const urlMatch = /(https?:\/\/[^\s]+)/g;
@@ -38,6 +39,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     private cli: OneApiCli;
     private languages: string[] = [];
     private currentPreviewPath = "";
+
+    public SampleQuickItems: SampleQuickItem[] = [];
 
     constructor() {
         this.cli = this.makeCLIFromConfig();
@@ -93,7 +96,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     }
 
     async refresh(): Promise<void> {
-        this._onDidChangeTreeData.fire();
+        this.SampleQuickItems = [];
+        this._onDidChangeTreeData.fire(undefined);
     }
     async clean(): Promise<void> {
         await this.cli.cleanCache();
@@ -182,6 +186,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             const add = new SampleTreeItem(ins.example.name, vscode.TreeItemCollapsibleState.None, ins.example.description, ins, undefined, undefined,
                 { command: "intel.oneAPISamples.show", title: "", arguments: [ins] });
             pos.set(ins.path, add);
+            this.SampleQuickItems.push(new SampleQuickItem(ins));
             return;
         }
         const cKey = key.shift();
