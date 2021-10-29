@@ -14,7 +14,7 @@
 		"iot"
 	],
 	"engines": {
-		"vscode": "^1.42.0"
+		"vscode": "^1.58.0"
 	},
 	"enableProposedApi": false,
 	"categories": [
@@ -23,7 +23,8 @@
 	"activationEvents": [
 		"onView:intel.oneAPISamples.tree",
 		"onCommand:intel.oneAPISamples.clean",
-		"onCommand:intel.oneAPISamples.refresh"
+		"onCommand:intel.oneAPISamples.refresh",
+		"onCommand:intel.oneAPISamples.quickpick"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -42,12 +43,17 @@
 			{
 				"command": "intel.oneAPISamples.create",
 				"title": "Create",
-				"icon": "$(add)"
+				"icon": "$(file-directory-create)"
 			},
 			{
 				"command": "intel.oneAPISamples.readme",
 				"title": "Open Readme",
 				"icon": "$(globe)"
+			},
+			{
+				"command": "intel.oneAPISamples.quickpick",
+				"title": "Intel oneAPI: Browse Samples",
+				"icon": "$(search)"
 			}
 		],
 		"viewsContainers": {
@@ -93,6 +99,11 @@
 					"command": "intel.oneAPISamples.refresh",
 					"when": "view == intel.oneAPISamples.tree",
 					"group": "navigation"
+				},
+				{
+					"command": "intel.oneAPISamples.quickpick",
+					"when": "view == intel.oneAPISamples.tree",
+					"group": "navigation"
 				}
 			],
 			"commandPalette": [
@@ -129,7 +140,8 @@
 					"type": "array",
 					"default": [
 						"cpp",
-						"python"
+						"python",
+						"fortran"
 					],
 					"description": "Specifies the languages for the sample tree to use"
 				},
@@ -160,7 +172,7 @@
 		"@types/request-promise": "^4.1.45",
 		"@types/rimraf": "^2.0.3",
 		"@types/semver": "^7.1.0",
-		"@types/vscode": "1.42",
+		"@types/vscode": "1.58",
 		"@typescript-eslint/eslint-plugin": "^2.19.0",
 		"@typescript-eslint/parser": "^2.19.0",
 		"chai": "^4.2.0",
