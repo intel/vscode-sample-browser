@@ -47,7 +47,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         vscode.workspace.onDidChangeConfiguration(event => {
             const affected = event.affectsConfiguration("intelOneAPI.samples");
             if (affected) {
-                this.updateCLIConfig();
+                this.cli = this.makeCLIFromConfig();
+                this.refresh();
             }
         });
     }
@@ -65,34 +66,6 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const baseURL: string | undefined = config.get('baseURL');
         const ignoreOSFilter: boolean | undefined = config.get("ignoreOsFilter");
         return new OneApiCli(this.askDownloadPermission, cliPath, baseURL, ignoreOSFilter);
-    }
-
-    private async updateCLIConfig(): Promise<void> {
-        const config = vscode.workspace.getConfiguration("intelOneAPI.samples");
-        const languageValue: string[] | undefined = config.get('sampleLanguage');
-
-        if (!languageValue || languageValue.length === 0) {
-            vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate");
-        }
-        this.languages = languageValue as string[];
-
-
-        const cliPath: string | undefined = config.get('pathToCLI');
-        if (cliPath) {
-            if (!(await this.cli.setCliPath(cliPath))) {
-                console.log("Intel oneAPI Sample Browser: CLI Path rejected");
-            }
-        }
-        const baseURL: string | undefined = config.get('baseURL');
-        if (baseURL) {
-            this.cli.baseURL = baseURL;
-        }
-        const ignoreOSFilter: boolean | undefined = config.get("ignoreOsFilter");
-        if (ignoreOSFilter) {
-            this.cli.ignoreOS = true;
-        } else {
-            this.cli.ignoreOS = false;
-        }
     }
 
     async refresh(): Promise<void> {

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.40
+
+- Improve handling of preferences/settings.
+
 ## 0.0.38
 
 - Add support for fortran
