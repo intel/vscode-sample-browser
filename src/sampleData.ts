@@ -7,6 +7,7 @@
 
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as path from 'path';
 
 import { OneApiCli, SampleContainer } from './oneapicli';
 import {SampleQuickItem} from "./quickpick";
@@ -117,22 +118,28 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
             }
         }
 
-        const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false });
+        const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false, openLabel: "Choose parent folder" });
         if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
-            if ((await fs.promises.readdir(folder[0].fsPath)).length) {
-                const overwrite = await vscode.window.showWarningMessage("The chosen folder is not empty. Creating the sample here *may* overwrite existing file!", { modal: true }, "Continue");
-                if (overwrite !== "Continue") {
-                    return;
+            const parentContent = await fs.promises.readdir(folder[0].fsPath);
+            let sampleFolder = val.example.name;
+
+            if (parentContent.length) {
+                //Because this directory is not empty, we need to check the destination for the sample is unique.
+                let inc = 0;
+                while (parentContent.includes(sampleFolder)) {
+                    inc++;
+                    sampleFolder = val.example.name + "_" + inc;
                 }
             }
+            const dest = path.join(folder[0].fsPath, sampleFolder);
             try {
-                await this.cli.createSample(val.language, val.path, folder[0].fsPath);
+                await this.cli.createSample(val.language, val.path, dest);
             }
             catch (e) {
                 vscode.window.showErrorMessage(`Sample Creation failed: ${e}`);
                 return;
             }
-            vscode.commands.executeCommand("vscode.openFolder", folder[0], true);
+            vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(dest), true);
         }
     }
     async readme(sample: SampleTreeItem): Promise<void> {

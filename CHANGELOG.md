@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.41
+
+- Improve handling during sample creation to avoid overwriting samples.
+
 ## 0.0.40
 
 - Improve handling of preferences/settings.
