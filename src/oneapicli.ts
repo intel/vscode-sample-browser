@@ -25,15 +25,15 @@ OneAPI-Interface in Typescript
                                      |
              +-----------------------v---------------------------+
              |             "oneapi-cli version" ran              |
- +---------->+  (could be an explict path, or uses first on PATH)|
+ +---------->+ (could be an explicit path, or uses first on PATH)|
  |           +--------------------------------------+------------+
  |                                                  |
  |Found                 Not Found                   | Found
- |Explict path to bin set                           | Version on STDOUT
+ |Explicit path to bin set                          | Version on STDOUT
  |                                                  v
  |       +---------------------------+     +--------+-----------------+
  |       |Check in $HOME/.oneapi-cli |     | Check version is greater |  Compatible
- +-------+                           |     | than minumum             +---+
+ +-------+                           |     | than minimum             +---+
          +----------+----------------+     +--------------------------+   |
                     |                                                     |
                     v  Not found                                +---------v----+
@@ -41,7 +41,7 @@ OneAPI-Interface in Typescript
       | Ask User for download permission+---+                   +---+----------+
       +---------------------------------+   |                       ^
                                             v                       |Download good.
-                                        +---+------+                |Explict path to bin set
+                                        +---+------+                |Explicit path to bin set
                                         | !Failed! |                |
                                         +---+------+                |
                                             ^                       |
@@ -82,7 +82,7 @@ export class OneApiCli {
             this.ignoreOS = false;
         }
         this.ready = new Promise<boolean>(async (resolve) => {
-            //This first attempt will either use the explict path try to use
+            //This first attempt will either use the explicit path try to use
             //a cli from the PATH
             let version = await this.getCliVersion(this.cli as string).catch();
             if (version && this.compareVersion(version)) {
@@ -98,7 +98,7 @@ export class OneApiCli {
                 return;
             }
 
-            //OK so no local verison found. Lets go download.
+            //OK so no local version found. Lets go download.
             if (await this.downloadPermissionCb()) {
                 const path = await this.downloadCli();
                 if (path === "") {
@@ -243,13 +243,13 @@ export class OneApiCli {
         try {
 
             const response = await fetch(url);
-            const sumReponse = await fetch(url + ".sha384");
+            const sumResponse = await fetch(url + ".sha384");
             const hasher = crypto.createHash("sha384", { encoding: "utf8" });
 
             const bin = await response.buffer();
             hasher.update(bin);
 
-            const srcSum = (await sumReponse.buffer()).toString().split("\n")[0];
+            const srcSum = (await sumResponse.buffer()).toString().split("\n")[0];
             const dlSum = hasher.digest("hex").toString();
 
 

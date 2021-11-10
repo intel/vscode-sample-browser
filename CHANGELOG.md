@@ -7,7 +7,7 @@
 ## 0.0.38
 
 - Add support for fortran
-- Add sample browsing via QuickPick command pallete UI
+- Add sample browsing via QuickPick command palette UI
 - Bump lowest version of VS Code to support.
 
 ## 0.0.37

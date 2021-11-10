@@ -91,7 +91,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     }
     private linkify(text: string): string {
         return text.replace(urlMatch, url => {
-            return `[${url}](${url})`; //Vscode Markdown needs explict href and text
+            return `[${url}](${url})`; //Vscode Markdown needs explicit href and text
         });
     }
 
@@ -103,7 +103,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         if (val?.example.dependencies && !skipCheck) {
             if (!process.env.ONEAPI_ROOT) {
                 vscode.window.
-                    showWarningMessage("FYI, This sample has a depedency but ONEAPI_ROOT is not set so we can not check if the depdencies are met");
+                    showWarningMessage("FYI, This sample has a dependency but ONEAPI_ROOT is not set so we can not check if the dependencies are met");
 
             } else {
                 const output = await this.cli.checkDependencies(val.example.dependencies.join());
@@ -149,8 +149,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
 
     /**
      * Add sample to tree structure.
-     * @param key Key, is the potentential categories i.e [mycategory, mysubcategory]
-     * @param pos is the partent element in the tree i.e. the owneing category
+     * @param key Key, is the potential categories i.e [mycategory, mysubcategory]
+     * @param pos is the parent element in the tree i.e. the owning category
      * @param ins Sample to be inserted into tree.
      */
     private addSample(key: string[], pos: Map<string, SampleTreeItem>, ins: SampleContainer): void {
@@ -203,12 +203,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
                 sampleArray = await this.cli.fetchSamples(l);
             }
             catch (e) {
-                vscode.window.showErrorMessage(`Failed to fetch langauge ${l} from the CLI: ${e}`);
-                continue; // Skip adding the node of this langauge
+                vscode.window.showErrorMessage(`Failed to fetch language ${l} from the CLI: ${e}`);
+                continue; // Skip adding the node of this language
             }
 
             if (sampleArray.length === 0) {
-                continue; //Skip adding the node of this langauge, the reponse was empty
+                continue; //Skip adding the node of this language, the response was empty
             }
 
             const newMap = new Map<string, SampleTreeItem>();
