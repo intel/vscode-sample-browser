@@ -47,7 +47,7 @@ The samples presented by this samples browser are also available in the
 
 We recommend that you also install these VS Code extensions:
 
-* [Environment Configurator for Intel oneAPI Tooklits][env]
+* [Environment Configurator for Intel oneAPI Toolkits][env]
 * [Microsoft Remote-Development Extension Pack][remote]
 * [Microsoft C/C++ for Visual Studio Code][cpp]
 
