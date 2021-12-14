@@ -121,7 +121,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const folder = await vscode.window.showOpenDialog({ canSelectFiles: false, canSelectFolders: true, canSelectMany: false, openLabel: "Choose parent folder" });
         if (val && folder && folder[0]) { //Check Value for sample creation was passed, and the folder selection was defined.
             const parentContent = await fs.promises.readdir(folder[0].fsPath);
-            let sampleFolder = val.example.name;
+            let sampleFolder = path.basename(val.path);
 
             if (parentContent.length) {
                 //Because this directory is not empty, we need to check the destination for the sample is unique.
