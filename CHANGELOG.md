@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.42
+
+- Fix issue with illegal characters in paths in Windows
+
 ## 0.0.41
 
 - Improve handling during sample creation to avoid overwriting samples.
