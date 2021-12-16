@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.43
+
+- Fix issue with auto incremented paths with illegal characters
+
 ## 0.0.42
 
 - Fix issue with illegal characters in paths in Windows
