@@ -128,7 +128,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
                 let inc = 0;
                 while (parentContent.includes(sampleFolder)) {
                     inc++;
-                    sampleFolder = val.example.name + "_" + inc;
+                    sampleFolder = path.basename(val.path) + "_" + inc;
                 }
             }
             const dest = path.join(folder[0].fsPath, sampleFolder);
