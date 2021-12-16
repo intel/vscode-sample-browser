@@ -1,0 +1,19 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-extensions:
+    runs-on: self-hosted
+    container: node:14
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Build the package
+        run: yarn install  && yarn package
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./*.vsix
