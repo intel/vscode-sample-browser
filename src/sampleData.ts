@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2020 Intel Corporation
  * Licensed under the MIT License. See the project root LICENSE
- * 
+ *
  * SPDX-License-Identifier: MIT
  */
 
@@ -59,7 +59,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const languageValue: string[] | undefined = config.get('sampleLanguages');
 
         if (!languageValue || languageValue.length === 0) {
-            vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate");
+            vscode.window.showErrorMessage("Configured language is empty, Intel oneAPI sample browser cannot operate. To specify the configured language, open VS Code settings and search for 'oneapi language'.");
         }
         this.languages = languageValue as string[];
 
@@ -99,12 +99,12 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     async create(sample: SampleTreeItem): Promise<void> {
         const val = sample.val;
 
-        //Dependency Check 
+        //Dependency Check
         const skipCheck: boolean = vscode.workspace.getConfiguration("intelOneAPI.samples").get('skipDependencyChecks') as boolean;
         if (val?.example.dependencies && !skipCheck) {
             if (!process.env.ONEAPI_ROOT) {
                 vscode.window.
-                    showWarningMessage("FYI, This sample has a dependency but ONEAPI_ROOT is not set so we can not check if the dependencies are met");
+                    showWarningMessage("Warning: This sample has a dependency but ONEAPI_ROOT is not set so we can not check if the dependencies are met. To specify the ONEAPI_ROOT, open VS Code settings and search for 'oneapi_root'.");
 
             } else {
                 const output = await this.cli.checkDependencies(val.example.dependencies.join());
@@ -150,7 +150,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     }
 
     public async askDownloadPermission(): Promise<boolean> {
-        const sel = await vscode.window.showQuickPick(["Yes", "No"], { ignoreFocusOut: true, canPickMany: false, placeHolder: "Required 'oneapi-cli' was not found on the Path, Do you want to download it" });
+        const sel = await vscode.window.showQuickPick(["Yes", "No"], { ignoreFocusOut: true, canPickMany: false, placeHolder: "Required 'oneapi-cli' was not found on the Path, do you want to download it?" });
         return (sel === "Yes");
     }
 
@@ -198,8 +198,8 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     private async getIndex(): Promise<SampleTreeItem[]> {
         const success = await this.cli.ready.catch(() => false);
         if (!success) {
-            vscode.window.showErrorMessage("Unable to find oneapi-cli or download it");
-            const fail = new SampleTreeItem("Unable to find oneapi-cli or download it", vscode.TreeItemCollapsibleState.None, "", undefined, undefined, "blankO");
+            vscode.window.showErrorMessage("Unable to find oneapi-cli or unable to download it. Open VS Code settings and search for 'oneapi-cli' to verify the correct path.");
+            const fail = new SampleTreeItem("Unable to find oneapi-cli or unable to download it. Open VS Code settings and search for 'oneapi-cli' to verify the correct path.", vscode.TreeItemCollapsibleState.None, "", undefined, undefined, "blankO");
             return [fail];
         }
         const root = new Map<string, SampleTreeItem>();

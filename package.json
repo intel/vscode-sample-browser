@@ -119,22 +119,22 @@
 				"intelOneAPI.samples.baseURL": {
 					"type": "string",
 					"default": null,
-					"description": "Base URL for the samples"
+					"description": "Base URL for the samples."
 				},
 				"intelOneAPI.samples.pathToCLI": {
 					"type": "string",
 					"default": null,
-					"description": "Specifies an absolute path of 'oneapi-cli' to use for sample acquisition"
+					"description": "Specifies an absolute path of 'oneapi-cli' to use for sample acquisition."
 				},
 				"intelOneAPI.samples.skipDependencyChecks": {
 					"type": "boolean",
 					"default": false,
-					"description": "Skips checking for install dependency a sample may require"
+					"description": "Set to TRUE to stop checking samples for required dependencies."
 				},
 				"intelOneAPI.samples.sampleLanguage": {
 					"type": "string",
 					"default": "cpp",
-					"description": "(Deprecated) Specifies the language for the sample tree to use"
+					"description": "(Deprecated) Specifies the language for the sample tree to use."
 				},
 				"intelOneAPI.samples.sampleLanguages": {
 					"type": "array",
@@ -143,12 +143,12 @@
 						"python",
 						"fortran"
 					],
-					"description": "Specifies the languages for the sample tree to use"
+					"description": "Specifies the languages for the sample tree to use."
 				},
 				"intelOneAPI.samples.ignoreOsFilter": {
 					"type": "boolean",
 					"default": false,
-					"description": "By default, samples are only shown for the OS you are running, this options removes this filtering"
+					"description": "By default, samples are only shown for the OS you are running. To show samples for all Operating Systems, select TRUE."
 				}
 			}
 		}
