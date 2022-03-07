@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.0.44
+
+- Minor doc changes for clarity.
+- Update dependencies
+
 ## 0.0.43
 
 - Fix issue with auto incremented paths with illegal characters
