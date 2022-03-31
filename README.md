@@ -53,7 +53,7 @@ We recommend that you also install these VS Code extensions:
 * [Microsoft Remote-Development Extension Pack][remote]
 * [Microsoft C/C++ for Visual Studio Code][cpp]
 
-[env]: <https://marketplace.visualstudio.com/items?itemName=intel-corporation.oneapi-environment-variables>
+[env]: <https://marketplace.visualstudio.com/items?itemName=intel-corporation.oneapi-environment-configurator>
 [remote]: <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack>
 [cpp]: <https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools>
 

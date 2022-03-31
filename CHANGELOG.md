@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.45
+
+- Corrected link to environment extension.
+
 ## 0.0.44
 
 - Minor doc changes for clarity.
