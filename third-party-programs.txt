@@ -14,9 +14,6 @@ terms are listed below.
 1. semver
    Copyright (c) Isaac Z. Schlueter and Contributors
 
-   rimraf
-   Copyright (c) Isaac Z. Schlueter and Contributors
-
 The ISC License
 
 Permission to use, copy, modify, and/or distribute this software for any

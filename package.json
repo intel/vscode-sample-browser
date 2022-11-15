@@ -170,7 +170,6 @@
 		"@types/node": "^17.0.21",
 		"@types/node-fetch": "^2.6.1",
 		"@types/request-promise": "^4.1.48",
-		"@types/rimraf": "^3.0.2",
 		"@types/semver": "^7.3.9",
 		"@types/vscode": "1.64",
 		"@typescript-eslint/eslint-plugin": "^5.12.1",
@@ -185,7 +184,6 @@
 	},
 	"dependencies": {
 		"node-fetch": "^2.6.7",
-		"rimraf": "^3.0.2",
 		"semver": "^7.3.5"
 	},
 	"repository": {
