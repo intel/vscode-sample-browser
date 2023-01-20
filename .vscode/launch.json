@@ -30,6 +30,18 @@
 				"${workspaceFolder}/out/test/**/*.js"
 			],
 			"preLaunchTask": "npm: watch"
+		},
+		{
+			"name": "Debug UI Tests",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceFolder}/node_modules/.bin/extest",
+			"args": [
+				"setup-and-run",
+				"${workspaceFolder}/out/test/ui/*.js"
+			],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
 		}
 	]
 }

@@ -174,7 +174,7 @@ export class OneApiCli {
             return p2.stdout as string;
 
         } catch (e: any) {
-                return e.stdout;
+            return e.stdout;
         }
     }
 
@@ -195,7 +195,7 @@ export class OneApiCli {
             const cmd = '"' + exe + '"' + " version";
             const a = await exec(cmd, {});
             if (a.stdout) {
-                return semver.clean(a.stdout.toString(), { includePrerelease: true }) as string;
+                return semver.clean(a.stdout.toString(), { includePrerelease: true } as semver.RangeOptions) as string;
             }
             return "";
         }
