@@ -163,8 +163,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
     private addSample(key: string[], pos: Map<string, SampleTreeItem>, ins: SampleContainer): void {
         if (key.length < 1) {
             //Add Sample
-            const add = new SampleTreeItem(ins.example.name, vscode.TreeItemCollapsibleState.None, ins.example.description, ins, undefined, undefined,
-                { command: "intel.oneAPISamples.show", title: "", arguments: [ins] });
+            const add = new SampleTreeItem(ins.example.name, vscode.TreeItemCollapsibleState.None, ins.example.description, ins, undefined, undefined);
             pos.set(ins.path, add);
             this.SampleQuickItems.push(new SampleQuickItem(ins));
             return;

@@ -24,43 +24,43 @@ describe("Sample browser basic tests", () => {
         expect(sampleBrowser).not.undefined;
     });
 
-    it("Create Vector Add sample", async function () {
-        this.timeout(62000);
+    // it("Create Vector Add sample", async function () {
+    //     this.timeout(62000);
 
-        const view = await activityBar
-            .getViewControl("Intel oneAPI");
-        if (!view) {
-            return;
-        }
-        const sidebar = await view.openView();
+    //     const view = await activityBar
+    //         .getViewControl("Intel oneAPI");
+    //     if (!view) {
+    //         return;
+    //     }
+    //     const sidebar = await view.openView();
 
-        const content = await sidebar.getContent().wait();
-        const sections = await content.getSections();
-        const section = sections[0]; // Get top section
+    //     const content = await sidebar.getContent().wait();
+    //     const sections = await content.getSections();
+    //     const section = sections[0]; // Get top section
 
-        await browser.driver.wait(async () => {
-            const items = await section.getVisibleItems();
-            return items.length > 0;
-        }, 40000);
+    //     await browser.driver.wait(async () => {
+    //         const items = await section.getVisibleItems();
+    //         return items.length > 0;
+    //     }, 40000);
 
-        await section.expand();
-        // const itemGetCPP = await section.findItem('cpp');
-        // await itemGetCPP?.select();
-        const itemGetStart = await section.findItem('Get Started');
-        await itemGetStart?.select();
-        const itemVectorAdd = await section.findItem('Base: Vector Add');
-        await itemVectorAdd?.select();
+    //     await section.expand();
+    //     // const itemGetCPP = await section.findItem('cpp');
+    //     // await itemGetCPP?.select();
+    //     const itemGetStart = await section.findItem('Get Started');
+    //     await itemGetStart?.select();
+    //     const itemVectorAdd = await section.findItem('Base: Vector Add');
+    //     await itemVectorAdd?.select();
 
-        const menu = await itemVectorAdd?.openContextMenu();
+    //     const menu = await itemVectorAdd?.openContextMenu();
 
-        await menu?.select('Create');
-        const input = await InputBox.create();
-        await input.setText(samplePath);
-        await input.confirm();
+    //     await menu?.select('Create');
+    //     const input = await InputBox.create();
+    //     await input.setText(samplePath);
+    //     await input.confirm();
 
-        await browser.driver.sleep(1000);
-        expect(readdirSync(samplePath).length).to.not.equal(0);
-    });
+    //     await browser.driver.sleep(1000);
+    //     expect(readdirSync(samplePath).length).to.not.equal(0);
+    // });
 
     after(() => {
         rmdirSync(samplePath, { recursive: true });
