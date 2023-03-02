@@ -3,7 +3,7 @@
 	"displayName": "Code Sample Browser for Intel® oneAPI Toolkits",
 	"description": "Browse samples for Intel oneAPI Toolkits",
 	"publisher": "intel-corporation",
-	"version": "0.0.49",
+	"version": "0.0.50",
 	"license": "MIT",
 	"icon": "media/oneapi-logo.png",
 	"keywords": [
@@ -183,7 +183,7 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"node-fetch": "^3.3.0",
+		"node-fetch": "2.6.7",
 		"semver": "^7.3.8"
 	},
 	"repository": {

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.59
+
+- Update dependencies
+
 ## 0.0.49
 
 - Update dependencies
