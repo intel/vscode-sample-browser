@@ -1,6 +1,8 @@
 # Change Log
+## 0.0.51
 
-## 0.0.59
+- Update dependencies
+## 0.0.50
 
 - Update dependencies
 
