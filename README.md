@@ -49,11 +49,11 @@ The samples presented by this samples browser are also available in the
 
 We recommend that you also install these VS Code extensions:
 
-* [Environment Configurator for Intel oneAPI Toolkits][env]
+* [Extension Pack for Intel® oneAPI Toolkits][pack]
 * [Microsoft Remote-Development Extension Pack][remote]
 * [Microsoft C/C++ for Visual Studio Code][cpp]
 
-[env]: <https://marketplace.visualstudio.com/items?itemName=intel-corporation.oneapi-environment-configurator>
+[pack]: <https://marketplace.visualstudio.com/items?itemName=intel-corporation.oneapi-extension-pack>
 [remote]: <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack>
 [cpp]: <https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools>
 
@@ -79,11 +79,10 @@ For information on how to use VS Code with Intel oneAPI toolkits read
 ## Contributing to this Extension
 
 Install a recent version of Visual Studio Code and open this project within
-it. You may also need to install `yarn` and `node + npm`.
+it. You may also need to install `node + npm`.
 
 ```bash
-npm install -g yarn
-yarn install
+npm i
 code .
 ```
 

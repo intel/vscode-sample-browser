@@ -1,26 +1,27 @@
-import { ActivityBar, VSBrowser, InputBox} from "vscode-extension-tester";
-import { expect } from "chai";
-import { rmdirSync, mkdir, readdirSync } from "fs";
-import * as path from "path";
+import { ActivityBar, VSBrowser, InputBox } from 'vscode-extension-tester';
+import { expect } from 'chai';
+import { rmdirSync, mkdir, readdirSync } from 'fs';
+import * as path from 'path';
 
-describe("Sample browser basic tests", () => {
+describe('Sample browser basic tests', () => {
     let browser: VSBrowser;
     let activityBar: ActivityBar;
     let samplePath: string;
 
-    before(async () => {
+    before(async() => {
         activityBar = new ActivityBar();
         browser = VSBrowser.instance;
         samplePath = path.join(process.cwd(), 'test-data', 'sample_dir');
 
-        mkdir(samplePath, {recursive: true}, (err: any) => {
+        mkdir(samplePath, { recursive: true }, (err: any) => {
             if (err) { throw err; }
         });
     });
 
-    it("Sample plugin should be available", async () => {
+    it('Sample plugin should be available', async() => {
         const sampleBrowser = await activityBar
-            .getViewControl("Intel oneAPI");
+            .getViewControl('Intel oneAPI');
+
         expect(sampleBrowser).not.undefined;
     });
 

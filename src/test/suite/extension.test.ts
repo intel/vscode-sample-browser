@@ -5,12 +5,12 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as inteloneapisamples from '../../extension';
 
-suite('Extension Test Suite', async () => {
-	vscode.window.showInformationMessage('Start all tests.');
-	await vscode.extensions.getExtension("intel-corporation.oneapi-samples");
+suite('Extension Test Suite', async() => {
+    vscode.window.showInformationMessage('Start all tests.');
+    await vscode.extensions.getExtension('intel-corporation.oneapi-samples');
 
-	test('Sample test', () => {
-		assert.equal([1, 2, 3].indexOf(5), -1);
-		assert.equal([1, 2, 3].indexOf(0), -1);
-	});
+    test('Sample test', () => {
+        assert.equal([1, 2, 3].indexOf(5), -1);
+        assert.equal([1, 2, 3].indexOf(0), -1);
+    });
 });

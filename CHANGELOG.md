@@ -1,4 +1,9 @@
 # Change Log
+
+## 0.0.52
+
+- Fixed xml2js dependency vulnerability
+- Updated README for nnpm auditpm project setup and to suggest to install Extension Pack for Intel® oneAPI Toolkits
 ## 0.0.51
 
 - Update dependencies

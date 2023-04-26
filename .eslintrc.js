@@ -13,7 +13,6 @@ module.exports = {
     ],
     "extends": ["plugin:@typescript-eslint/recommended"],
     "rules": {
-        "@typescript-eslint/class-name-casing": "warn",
         "@typescript-eslint/member-delimiter-style": [
             "warn",
             {
@@ -38,14 +37,16 @@ module.exports = {
         ],
         "no-redeclare": "warn",
         "no-throw-literal": "warn",
-        "no-unused-expressions": "warn"
-    },
-    "overrides": [
-        {
-            "files": ["src/test/**/*"],
-            "rules": {
-                "no-unused-expressions": "off"
-            }
-        }
-    ]
+        "no-unused-expressions": "warn",
+        "indent": ["error", 4],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "no-empty": "warn",
+        "no-cond-assign": ["error", "always"],
+        "for-direction": "off",
+        "newline-after-var": ["error", "always"],
+        "object-curly-spacing": ["error", "always"],
+        "space-before-function-paren": ["error", "never"]
+    }
 };
