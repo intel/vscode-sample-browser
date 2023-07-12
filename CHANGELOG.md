@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.53
+
+- Fixed word-wrap dependency vulnerability
+
 ## 0.0.52
 
 - Fixed xml2js dependency vulnerability
