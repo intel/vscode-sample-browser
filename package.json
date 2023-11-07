@@ -3,7 +3,7 @@
 	"displayName": "Code Sample Browser for Intel® oneAPI Toolkits",
 	"description": "Browse samples for Intel oneAPI Toolkits",
 	"publisher": "intel-corporation",
-	"version": "0.0.53",
+	"version": "0.0.54",
 	"license": "MIT",
 	"icon": "media/oneapi-logo.png",
 	"keywords": [
@@ -14,7 +14,7 @@
 		"iot"
 	],
 	"engines": {
-		"vscode": "^1.76.0"
+		"vscode": "^1.81.0"
 	},
 	"categories": [
 		"Other"
@@ -157,27 +157,27 @@
 		"ui-test": "extest setup-and-run --yarn out/test/ui/*.js"
 	},
 	"devDependencies": {
-		"@types/chai": "^4.3.4",
+		"@types/chai": "^4.3.5",
 		"@types/glob": "^8.1.0",
 		"@types/mocha": "^10.0.1",
-		"@types/node": "^18.15.11",
-		"@types/node-fetch": "^2.6.3",
+		"@types/node": "^20.5.0",
+		"@types/node-fetch": "^2.6.4",
 		"@types/request-promise": "^4.1.48",
-		"@types/semver": "^7.3.13",
-		"@types/vscode": "1.76",
-		"@typescript-eslint/eslint-plugin": "^5.57.0",
-		"@typescript-eslint/parser": "^5.57.0",
-		"@vscode/test-electron": "^2.3.0",
-		"@vscode/vsce": "^2.18.0",
+		"@types/semver": "^7.5.0",
+		"@types/vscode": "1.81",
+		"@typescript-eslint/eslint-plugin": "^6.4.0",
+		"@typescript-eslint/parser": "^6.4.0",
+		"@vscode/test-electron": "^2.3.4",
+		"@vscode/vsce": "^2.20.1",
 		"chai": "^4.3.7",
-		"eslint": "^8.37.0",
+		"eslint": "^8.47.0",
 		"mocha": "^10.2.0",
-		"typescript": "^5.0.2",
-		"vscode-extension-tester": "^5.5.1"
+		"typescript": "^5.1.6",
+		"vscode-extension-tester": "^5.9.0"
 	},
 	"dependencies": {
-		"node-fetch": "2.6.7",
-		"semver": "^7.3.8"
+		"node-fetch": "3.3.2",
+		"semver": "^7.5.4"
 	},
 	"repository": {
 		"type": "git",

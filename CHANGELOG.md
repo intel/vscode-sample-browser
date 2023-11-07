@@ -1,36 +1,41 @@
 # Change Log
 
+## 0.0.54
+
+- Updated versions of 3rd party dependencies
+
 ## 0.0.53
 
-- Fixed word-wrap dependency vulnerability
+- Updated version of 'word-wrap' dependency
 
 ## 0.0.52
 
-- Fixed xml2js dependency vulnerability
-- Updated README for nnpm auditpm project setup and to suggest to install Extension Pack for Intel® oneAPI Toolkits
+- Updated version of 'xml2js' dependency
+
 ## 0.0.51
 
-- Update dependencies
+- Updated versions of 3rd party dependencies
+
 ## 0.0.50
 
-- Update dependencies
+- Updated versions of 3rd party dependencies
 
 ## 0.0.49
 
-- Update dependencies
+- Updated versions of 3rd party dependencies
 
 ## 0.0.48
 
-- Update dependencies
+- Updated versions of 3rd party dependencies
 
 ## 0.0.47
 
-- Update dependencies
+- Updated versions of 3rd party dependencies
 
 ## 0.0.46
 
-- Minor changes.
-- Update dependencies
+- Minor changes
+- Updated versions of 3rd party dependencies
 
 ## 0.0.45
 
@@ -38,8 +43,8 @@
 
 ## 0.0.44
 
-- Minor doc changes for clarity.
-- Update dependencies
+- Minor doc changes for clarity
+- Updated versions of 3rd party dependencies
 
 ## 0.0.43
 
@@ -65,7 +70,7 @@
 
 ## 0.0.37
 
-- `oneapi-cli` download action verfies with SHA384
+- `oneapi-cli` download action verifies with SHA384
 - Bump devel-dependencies
 
 ## 0.0.36

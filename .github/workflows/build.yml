@@ -18,7 +18,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Build the package
-        run: yarn install  && yarn package
+        run: npm install  && npm run package
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
