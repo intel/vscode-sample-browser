@@ -15,8 +15,9 @@ import util = require('util');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const exec = util.promisify(require('child_process').exec);
 
-import fetch from 'node-fetch';
 import * as semver from 'semver';
+import { RequestInfo } from 'node-fetch';
+const fetch = (args: URL | RequestInfo) => import('node-fetch').then(({ default: fetch }) => fetch(args));
 
 /** 
 OneAPI-Interface in Typescript
@@ -82,7 +83,7 @@ export class OneApiCli {
         if (!ignoreOS) {
             this.ignoreOS = false;
         }
-        this.ready = new Promise<boolean>(async(resolve) => {
+        this.ready = new Promise<boolean>(async (resolve) => {
             //This first attempt will either use the explicit path try to use
             //a cli from the PATH
             let version = await this.getCliVersion(this.cli as string).catch();
@@ -219,18 +220,18 @@ export class OneApiCli {
         let binSuffix = '';
 
         switch (os.platform()) {
-        case 'darwin':
-        case 'linux':
-            builtOS = os.platform();
-            break;
-        case 'win32': {
-            builtOS = 'windows';
-            binSuffix = '.exe';
-            break;
-        }
-        default: {
-            return ''; //Dump out early we have no business here right now!
-        }
+            case 'darwin':
+            case 'linux':
+                builtOS = os.platform();
+                break;
+            case 'win32': {
+                builtOS = 'windows';
+                binSuffix = '.exe';
+                break;
+            }
+            default: {
+                return ''; //Dump out early we have no business here right now!
+            }
         }
 
         const assetPath = `${cliBinName}-${builtOS}${binSuffix}`;

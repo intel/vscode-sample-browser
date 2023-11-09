@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.55
+
+- Bug fixing
+
 ## 0.0.54
 
 - Updated versions of 3rd party dependencies
