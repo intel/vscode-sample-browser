@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.0.57
+
+- Bug fixing
+
+## 0.0.56
+
+- Bug fixing
+
 ## 0.0.55
 
 - Bug fixing

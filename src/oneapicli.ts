@@ -14,10 +14,8 @@ import * as crypto from 'crypto';
 import util = require('util');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const exec = util.promisify(require('child_process').exec);
-
+import fetch from 'node-fetch';
 import * as semver from 'semver';
-import { RequestInfo } from 'node-fetch';
-const fetch = (args: URL | RequestInfo) => import('node-fetch').then(({ default: fetch }) => fetch(args));
 
 /** 
 OneAPI-Interface in Typescript
