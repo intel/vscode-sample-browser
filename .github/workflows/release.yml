@@ -3,17 +3,17 @@ on:
   push:
     tags:
       - "v*.*.*"
-
 jobs:
   build-extensions:
-    runs-on: [self-hosted, linux]
-    container: node:14
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: write
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 #v4
       - name: Build the package
-        run: yarn install  && yarn package
+        run: npm install  && npm run package
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 #v0.1.15
         with:
           files: ./*.vsix
