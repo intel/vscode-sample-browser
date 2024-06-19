@@ -60,7 +60,7 @@ export class SampleProvider implements vscode.TreeDataProvider<SampleTreeItem> {
         const languageValue: string[] | undefined = config.get('sampleLanguages');
 
         if (!languageValue || languageValue.length === 0) {
-            vscode.window.showErrorMessage('Configured language is empty, Intel oneAPI sample browser cannot operate. To specify the configured language, open VS Code settings and search for \'oneapi language\'.');
+            vscode.window.showErrorMessage('Configured language is empty, Code Sample Browser for Intel Software Developer Tools cannot operate. To specify the configured language, open VS Code settings and search for \'oneapi language\'.');
         }
         this.languages = languageValue as string[];
 

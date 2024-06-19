@@ -61,5 +61,5 @@ export function activate(context: vscode.ExtensionContext): void{
 }
 
 export function deactivate(): void {
-    console.log('Intel oneAPI Sample Browser: Goodbye');
+    console.log('Code Sample Browser for Intel Software Developer Tools: Goodbye');
 }
