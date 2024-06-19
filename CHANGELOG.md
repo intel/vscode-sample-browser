@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.58
+
+- Updated name for extension
+
 ## 0.0.57
 
 - Bug fixing

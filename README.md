@@ -1,4 +1,4 @@
-# Code Sample Browser for Intel® oneAPI Toolkits
+# Code Sample Browser for Intel Software Developer Tools
 
 The Code Sample Browser extension for Visual Studio Code (VS Code) helps you
 discover and create projects
@@ -49,7 +49,7 @@ The samples presented by this samples browser are also available in the
 
 We recommend that you also install these VS Code extensions:
 
-* [Extension Pack for Intel® oneAPI Toolkits][pack]
+* [Extension Pack for Intel Software Developer Tools][pack]
 * [Microsoft Remote-Development Extension Pack][remote]
 * [Microsoft C/C++ for Visual Studio Code][cpp]
 
