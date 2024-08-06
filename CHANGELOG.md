@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.60
+
+- version update for new release
+
 ## 0.0.59
 
 - 3rd Party component dependency version update
