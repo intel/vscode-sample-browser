@@ -11,7 +11,7 @@ Use this extension to find samples that will help you:
 * Apply the [DPC++ language extensions][dpcpp] to your applications and enable
   the use of CPUs, GPUs, and FPGAs for accelerated application performance.
 
-[dpcpp]: <https://spec.oneapi.io/versions/latest/elements/sycl/source/index.html>
+[dpcpp]: <https://oneapi-spec.uxlfoundation.org/specifications/oneapi/v1.3-rev-1/elements/sycl/source/>
 
 * Learn how to use the Intel performance libraries to enable your applications
   with faster threading, matrix arithmetic, machine learning, and other tasks.
