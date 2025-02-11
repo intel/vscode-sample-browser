@@ -171,7 +171,7 @@
 		"@vscode/vsce": "^2.22.0",
 		"chai": "^4.3.10",
 		"eslint": "^8.52.0",
-		"mocha": "^10.2.0",
+		"mocha": "^10.8.2",
 		"typescript": "^5.2.2",
 		"vscode-extension-tester": "^5.10.0"
 	},
