@@ -1,4 +1,8 @@
 # Change Log
+## 0.0.61
+
+- CVE Vulnerability Fixes
+
 ## 0.0.60
 
 - 3rd Party component dependency version update - Bumps micromatch
