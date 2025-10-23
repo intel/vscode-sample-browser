@@ -1,4 +1,8 @@
 # Change Log
+## 0.0.63
+
+- CVE Vulnerability Mitigations
+
 ## 0.0.62
 
 - Security Fixes for CVE Vulnerabilities
