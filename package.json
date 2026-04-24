@@ -173,7 +173,7 @@
 		"@vscode/test-electron": "^2.5.2",
 		"@vscode/vsce": "^3.5.0",
 		"chai": "^4.3.10",
-		"eslint": "^9.39.2",
+		"eslint": "^8.52.0",
 		"mocha": "^10.8.2",
 		"typescript": "^5.2.2",
 		"vscode-extension-tester": "^5.10.0"
