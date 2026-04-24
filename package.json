@@ -157,7 +157,8 @@
 		"ui-test": "extest setup-and-run --yarn out/test/ui/*.js"
 	},
 	"overrides": {
-		"glob": "^11.0.0 || >=11.1.0"
+		"glob": "^11.0.0 || >=11.1.0",
+		"serialize-javascript": "^7.0.5"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.9",
@@ -168,15 +169,15 @@
 		"@types/request-promise": "^4.1.50",
 		"@types/semver": "^7.5.4",
 		"@types/vscode": "1.83",
-		"@typescript-eslint/eslint-plugin": "^6.9.1",
-		"@typescript-eslint/parser": "^6.9.1",
+		"@typescript-eslint/eslint-plugin": "^8.59.0",
+		"@typescript-eslint/parser": "^8.59.0",
 		"@vscode/test-electron": "^2.5.2",
-		"@vscode/vsce": "^3.5.0",
+		"@vscode/vsce": "^3.9.1",
 		"chai": "^4.3.10",
 		"eslint": "^8.52.0",
-		"mocha": "^10.8.2",
-		"typescript": "^5.2.2",
-		"vscode-extension-tester": "^5.10.0"
+		"mocha": "^11.7.5",
+		"typescript": "^5.9.3",
+		"vscode-extension-tester": "^8.0.2"
 	},
 	"dependencies": {
 		"node-fetch": "^2.7.0",

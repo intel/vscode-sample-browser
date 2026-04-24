@@ -257,7 +257,7 @@ export class OneApiCli {
 
             const bin = await response.buffer();
 
-            hasher.update(bin);
+            hasher.update(bin as unknown as Uint8Array);
 
             const srcSum = (await sumResponse.buffer()).toString().split('\n')[0];
             const dlSum = hasher.digest('hex').toString();
@@ -269,7 +269,7 @@ export class OneApiCli {
                 return '';
             }
 
-            await fs.promises.writeFile(cliPath, bin, { mode: 0o755 });
+            await fs.promises.writeFile(cliPath, bin as unknown as Uint8Array, { mode: 0o755 });
         }
         catch (e) {
             return '';
