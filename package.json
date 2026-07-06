@@ -3,7 +3,7 @@
 	"displayName": "Code Sample Browser for Intel Software Developer Tools",
 	"description": "Browse samples for Intel oneAPI Toolkits",
 	"publisher": "intel-corporation",
-	"version": "0.0.65",
+	"version": "0.0.66",
 	"license": "MIT",
 	"icon": "media/oneapi-logo.png",
 	"keywords": [
@@ -175,7 +175,7 @@
 		"@vscode/vsce": "^3.9.1",
 		"chai": "^4.3.10",
 		"eslint": "^8.52.0",
-		"mocha": "^11.7.5",
+		"mocha": "^11.3.0",
 		"typescript": "^5.9.3",
 		"vscode-extension-tester": "^8.0.2"
 	},
