@@ -1,5 +1,18 @@
 # Code Sample Browser for Intel Software Developer Tools
 
+## ⚠️ End-of-Life Notice
+
+This project is scheduled to reach its End-of-Life (EOL).
+
+* Code Sample Browser for Intel Software Developer Tools will be discontinued in the 2026.3.0 release.
+* No further updates or maintenance will be provided after the 2026.3.0 release.
+* Issues and pull requests will no longer be monitored or addressed.
+* The repository may be archived in the near future.
+
+***
+
+## [Original README Content]
+
 The Code Sample Browser extension for Visual Studio Code (VS Code) helps you
 discover and create projects
 that illustrate how to implement algorithms and applications with the oneAPI

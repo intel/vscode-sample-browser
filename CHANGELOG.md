@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.67
+
+- Security: Addressed multiple reported CVE vulnerabilities.
+
 ## 0.0.66
 
 - Security: Resolved multiple reported CVE vulnerabilities
